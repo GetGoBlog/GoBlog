@@ -125,7 +125,45 @@ Admin
 
 var signup = `
 {{define "content"}}
-Signup
+<div class="col-md-6 col-md-offset-3">
+
+<form class="form-horizontal" action="/signup/" method="POST">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Sign Up for GoBlog</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="email">E-mail address</label>  
+  <div class="col-md-6">
+  <input id="email" name="email" type="text" placeholder="E-mail address" class="form-control input-md" required="">
+    
+  </div>
+</div>
+
+<!-- Password input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="password">Password</label>
+  <div class="col-md-6">
+    <input id="password" name="password" type="password" placeholder="Password" class="form-control input-md" required="">
+    
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="submit"></label>
+  <div class="col-md-4">
+    <button id="submit" name="submit" class="btn btn-success">Sign Me Up!</button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+</div>
+
 {{end}}
 `
 
