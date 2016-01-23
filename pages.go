@@ -46,8 +46,10 @@ var base = `
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
       <ul class="nav navbar-nav navbar-right">
-		<li {{if eq .PageName "signup" }}class="active"{{end}}><a href="/signup">Sign Up</a></li>
-	<li class="dropdown">
+		<li {{if not .User}}class="hidden"{{end}}> <a href="/admin">{{if .User}}{{.User}}{{end}}</a> </li>
+		<li {{if not .User}}class="hidden"{{end}}> <a href="/logout">Log Out</a> </li>
+		<li {{if .User}}class="hidden"{{end}} {{if eq .PageName "signup" }}class="active"{{end}}><a href="/signup">Sign Up</a></li>
+	<li {{if .User}}class="hidden"{{end}} class="dropdown">
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Sign in <b class="caret"></b></a>
 		<ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
 			<li>
