@@ -1,13 +1,36 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"time"
 
+	"github.com/boltdb/bolt"
 	"github.com/julienschmidt/httprouter"
 )
+
+// TODO add bcrypt
+
+func init() {
+	// Handles db/bucket creation
+	db, err := bolt.Open("goblog.db", 0600, nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte("UsersBucket"))
+		if err != nil {
+			return fmt.Errorf("Error with UsersBucket: %s", err)
+		}
+		return nil
+	})
+
+}
 
 func LoginPage(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	baseT := template.Must(template.New("base").Parse(base))
@@ -25,10 +48,14 @@ func LoginHandler(w http.ResponseWriter, req *http.Request, p httprouter.Params)
 
 	if verifyUser(w, req, username, password) {
 		http.Redirect(w, req, "/admin/", http.StatusFound)
+	} else {
+		http.Redirect(w, req, "/", http.StatusFound)
 	}
 }
 
 func LogoutHandler(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
+	delete := http.Cookie{Name: "goblog", Value: "blah", Expires: time.Now(), HttpOnly: true, Path: "/"}
+	http.SetCookie(w, &delete)
 	http.Redirect(w, req, "/", http.StatusFound)
 }
 
@@ -81,15 +108,45 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func verifyUser(w http.ResponseWriter, r *http.Request, username string, password string) bool {
-	cookie := http.Cookie{Name: "goblog", Value: "blah", Expires: time.Now().Add(time.Hour * 24 * 7 * 52), HttpOnly: true, MaxAge: 50000, Path: "/"}
-	http.SetCookie(w, &cookie)
-	return true
+	correctpass := []byte("")
+	db, err := bolt.Open("goblog.db", 0600, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+	db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("UsersBucket"))
+		correctpass = b.Get([]byte(username))
+		return nil
+	})
+	if password == string(correctpass) {
+		cookie := http.Cookie{Name: "goblog", Value: "blah", Expires: time.Now().Add(time.Hour * 24 * 7 * 52), HttpOnly: true, MaxAge: 50000, Path: "/"}
+		http.SetCookie(w, &cookie)
+		return true
+	}
+	return false
 }
 
 func addUser(username string, password string) bool {
-	// Insert into database
-
-	return true
+	check := []byte("")
+	db, err := bolt.Open("goblog.db", 0600, nil)
+	db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("UsersBucket"))
+		check = b.Get([]byte(username)) //username
+		return nil
+	})
+	if err != nil {
+		fmt.Println(err)
+	}
+	if len(check) > 2 {
+		db.Update(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("UsersBucket"))
+			err := b.Put([]byte(username), []byte(password))
+			return err
+		})
+		return true
+	} else {
+		return false
+	}
 }
 
 func getUser(w http.ResponseWriter, r *http.Request) string {
