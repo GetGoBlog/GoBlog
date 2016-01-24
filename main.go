@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os/exec"
 	"time"
 
 	"github.com/boltdb/bolt"
@@ -40,7 +41,7 @@ func init() {
 	db.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucketIfNotExists([]byte("BlogMappingBucket")) // random string -> email
 		if err != nil {
-			return fmt.Errorf("Error with BlockMappingBucket: %s", err)
+			return fmt.Errorf("Error with BlogMappingBucket: %s", err)
 		}
 		return nil
 	})
@@ -112,7 +113,6 @@ func SignupHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	password := r.FormValue("password")
 
 	if addUser(email, password) {
-		fmt.Println("Success!")
 		cookie := http.Cookie{Name: "goblog", Value: RandomString(), Expires: time.Now().Add(time.Hour * 24 * 7 * 52), HttpOnly: true, MaxAge: 50000, Path: "/"}
 		http.SetCookie(w, &cookie)
 		db, err := bolt.Open("goblog.db", 0600, nil)
@@ -148,6 +148,44 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			"PageName": "admin",
 			"User":     getUser(w, r),
 		})
+	} else {
+		fmt.Fprintf(w, "You must be authenticated!") // TODO make this look better
+	}
+}
+
+func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	blogname := r.FormValue("blogname")
+	website := r.FormValue("website")
+	port := 1000
+	blogcheck := []byte("")
+
+	if getUser(w, r) != "" {
+		db, err := bolt.Open("goblog.db", 0600, nil)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer db.Close()
+		db.View(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("BlogMappingBucket"))
+			blogcheck = b.Get([]byte(blogname))
+			return nil
+		})
+		if blogcheck == nil {
+			create, err := exec.Command("./create.sh", blogname, website, string(port)).Output()
+			if err != nil {
+				fmt.Println(err)
+			} else {
+				fmt.Fprintf(w, "%s", create)
+				db.Update(func(tx *bolt.Tx) error {
+					b := tx.Bucket([]byte("UsersBucket"))
+					err := b.Put([]byte(blogname), []byte(website))
+					return err
+				})
+			}
+		} else {
+			fmt.Println("Failure!")
+			http.Redirect(w, r, "/", http.StatusFound)
+		}
 	} else {
 		fmt.Fprintf(w, "You must be authenticated!") // TODO make this look better
 	}
@@ -273,6 +311,7 @@ func main() {
 	router.GET("/signup/", SignupPage)
 	router.POST("/signup/", SignupHandler)
 	router.GET("/admin/", AdminPage)
+	router.POST("/admin/", AdminHandler)
 	router.GET("/logout/", LogoutHandler)
 	log.Fatal(http.ListenAndServe(":1338", router))
 }

@@ -113,7 +113,44 @@ var login = `
 
 var admin = `
 {{define "content"}}
-Admin
+<div class="col-md-6 col-md-offset-3">
+
+<form class="form-horizontal" action="/admin/" method="POST">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Create a new blog</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="blog">Blog Name</label>  
+  <div class="col-md-6">
+  <input id="blogname" name="blogname" type="text" placeholder="Blog Name" class="form-control input-md" required="">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="website">Blog Website</label>  
+  <div class="col-md-6">
+  <input id="blogname" name="website" type="text" placeholder="Blog Website" class="form-control input-md" required="">
+    
+  </div>
+</div>
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="submit"></label>
+  <div class="col-md-4">
+    <button id="submit" name="submit" class="btn btn-success">Create Blog</button>
+  </div>
+</div>
+
+</fieldset>
+</form>
+
+</div>
 {{end}}
 `
 
@@ -131,7 +168,7 @@ var signup = `
 <div class="form-group">
   <label class="col-md-4 control-label" for="email">E-mail address</label>  
   <div class="col-md-6">
-  <input id="email" name="email" type="text" placeholder="E-mail address" class="form-control input-md" required="">
+  <input id="email" name="email" type="email" placeholder="E-mail address" class="form-control input-md" required="">
     
   </div>
 </div>
