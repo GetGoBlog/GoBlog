@@ -190,18 +190,19 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	blogname := r.FormValue("blogname")
-	websiteOriginal := r.FormValue("website")
+	blogname := r.FormValue("blogname") // <- Subdomain
+	//	websiteOriginal := r.FormValue("website")
 	port := rand.Intn(63000) + 2000
 
-	website, err := checkUrl(websiteOriginal)
-	if err != nil {
-		http.Redirect(w, r, fmt.Sprintf("/error/%s is not a valid url", websiteOriginal), http.StatusFound)
-		return
-	}
+	//	website, err := checkUrl(websiteOriginal)
+	//	if err != nil {
+	//		http.Redirect(w, r, fmt.Sprintf("/error/%s is not a valid url", websiteOriginal), http.StatusFound)
+	//		return
+	//	}
 
 	re := regexp.MustCompile("[^A-Za-z]")
 	blogname = re.ReplaceAllString(blogname, "")
+	website := blogname + ".goblog.pw"
 
 	blogcheck := []byte("")
 
