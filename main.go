@@ -183,8 +183,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 				})
 			}
 		} else {
-			fmt.Println("Failure!")
-			http.Redirect(w, r, "/", http.StatusFound)
+			fmt.Fprintf(w, "Failure creating blog! Please choose a different name!")
 		}
 	} else {
 		fmt.Fprintf(w, "You must be authenticated!") // TODO make this look better
