@@ -51,13 +51,13 @@ func LoginPage(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 }
 
 func LoginHandler(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
-	username := req.FormValue("email")
+	email := req.FormValue("email")
 	password := req.FormValue("password")
 
-	if verifyUser(w, req, username, password) {
+	if verifyUser(w, req, email, password) {
 		http.Redirect(w, req, "/admin/", http.StatusFound)
 	} else {
-		http.Redirect(w, req, "/", http.StatusFound)
+		fmt.Fprintf(w, "Invalid email/password")
 	}
 }
 
@@ -102,10 +102,10 @@ func SignupPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func SignupHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	username := r.FormValue("email")
+	email := r.FormValue("email")
 	password := r.FormValue("password")
 
-	if addUser(username, password) {
+	if addUser(email, password) {
 		fmt.Println("Success!")
 		http.Redirect(w, r, "/admin/", http.StatusFound)
 	} else {
@@ -115,20 +115,18 @@ func SignupHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	// authenticate username and password
-	blogname := ps.ByName("blogname")
+	if getUser(w, r) != "" {
 
-	if len(blogname) < 20 {
-		// create new blog
+		baseT := template.Must(template.New("base").Parse(base))
+		baseT = template.Must(baseT.Parse(admin))
+
+		baseT.ExecuteTemplate(w, "base", map[string]string{
+			"PageName": "admin",
+			"User":     getUser(w, r),
+		})
+	} else {
+		fmt.Fprintf(w, "You must be authenticated!") // TODO make this look better
 	}
-
-	baseT := template.Must(template.New("base").Parse(base))
-	baseT = template.Must(baseT.Parse(admin))
-
-	baseT.ExecuteTemplate(w, "base", map[string]string{
-		"PageName": "admin",
-		"User":     getUser(w, r),
-	})
 }
 
 func verifyUser(w http.ResponseWriter, r *http.Request, username string, password string) bool {
@@ -215,29 +213,31 @@ func RandomString() string {
 	return string(b)
 }
 
-var servervalue []byte
-
 func getUser(w http.ResponseWriter, r *http.Request) string {
 	cookie, err := r.Cookie("goblog")
-	if cookie != nil && err == nil {
-		if err != nil {
-			fmt.Println(err)
-		}
-		db, err := bolt.Open("goblog.db", 0600, nil)
-		if err != nil {
-			fmt.Println(err)
-		}
-		defer db.Close()
-		db.View(func(tx *bolt.Tx) error {
-			b := tx.Bucket([]byte("CookieBucket"))
-			servervalue = b.Get([]byte(cookie.Value))
-			return nil
-		})
-		if servervalue != nil {
-			if len(servervalue) > 2 {
-				return string(servervalue)
-			}
-		}
+	if err != nil {
+		fmt.Println(err) // No cookie
+	}
+	if cookie != nil {
+		return getUserFromCookie(cookie.Value)
+	}
+	return ""
+}
+
+func getUserFromCookie(value string) string {
+	servervalue := []byte("")
+	db, err := bolt.Open("goblog.db", 0600, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
+	db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("CookieBucket"))
+		servervalue = b.Get([]byte(value))
+		return nil
+	})
+	if servervalue != nil {
+		return string(servervalue)
 	}
 	return ""
 }
@@ -245,12 +245,10 @@ func getUser(w http.ResponseWriter, r *http.Request) string {
 func main() {
 	router := httprouter.New()
 	router.GET("/", MainPage)
-	//router.GET("/login/", LoginPage)
 	router.POST("/login/", LoginHandler)
 	router.GET("/signup/", SignupPage)
 	router.POST("/signup/", SignupHandler)
 	router.GET("/admin/", AdminPage)
 	router.GET("/logout/", LogoutHandler)
-	router.GET("/new/:email/:password", SignupHandler) // <- for testing
 	log.Fatal(http.ListenAndServe(":1338", router))
 }
