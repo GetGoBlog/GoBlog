@@ -7,7 +7,6 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
-	"net/url"
 	"os/exec"
 	"regexp"
 	"strconv"
@@ -168,6 +167,8 @@ func SignupHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	success := r.FormValue("success")
+
 	username := getUser(w, r)
 	if username != "" {
 		db, err := bolt.Open("goblog.db", 0600, nil)
@@ -183,6 +184,7 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			"PageName": "admin",
 			"User":     username,
 			"Blogs":    getBlogsForUser(db, username),
+			"Success":  success,
 		})
 	} else {
 		http.Redirect(w, r, "/error/You must be authenticated!", http.StatusFound)
@@ -394,15 +396,15 @@ func getUserFromCookie(value string) string {
 	return ""
 }
 
-func checkUrl(s string) (string, error) {
-	u, err := url.Parse(s)
+//func checkUrl(s string) (string, error) {
+//	u, err := url.Parse(s)
 
-	if err != nil || u.Host == "" {
-		u, err = url.Parse("http://" + s)
-	}
+//	if err != nil || u.Host == "" {
+//		u, err = url.Parse("http://" + s)
+//	}
 
-	return u.Host, err
-}
+//	return u.Host, err
+//}
 
 func main() {
 	fmt.Println("Started server on port 1337")
