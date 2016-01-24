@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"os/exec"
 	"regexp"
 	"strconv"
@@ -81,7 +82,7 @@ func LoginHandler(w http.ResponseWriter, req *http.Request, p httprouter.Params)
 	if verifyUser(w, req, email, password) {
 		http.Redirect(w, req, "/admin/", http.StatusFound)
 	} else {
-		fmt.Fprintf(w, "Invalid email/password")
+		http.Redirect(w, req, "/error/Invalid email or password", http.StatusFound)
 	}
 }
 
@@ -184,14 +185,20 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			"Blogs":    getBlogsForUser(db, username),
 		})
 	} else {
-		fmt.Fprintf(w, "You must be authenticated!") // TODO make this look better
+		http.Redirect(w, r, "/error/You must be authenticated!", http.StatusFound)
 	}
 }
 
 func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	blogname := r.FormValue("blogname")
-	website := r.FormValue("website")
+	websiteOriginal := r.FormValue("website")
 	port := rand.Intn(63000) + 2000
+
+	website, err := checkUrl(websiteOriginal)
+	if err != nil {
+		http.Redirect(w, r, fmt.Sprintf("/error/%s is not a valid url", websiteOriginal), http.StatusFound)
+		return
+	}
 
 	re := regexp.MustCompile("[^A-Za-z]")
 	blogname = re.ReplaceAllString(blogname, "")
@@ -217,7 +224,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 				fmt.Println(err)
 			} else {
 				fmt.Println("80 -> " + strconv.Itoa(port))
-				fmt.Fprintf(w, "%s", create)
+				fmt.Println(create)
 				db.Update(func(tx *bolt.Tx) error {
 					b := tx.Bucket([]byte("BlogMappingBucket"))
 					err := b.Put([]byte(blogname), []byte(website))
@@ -225,12 +232,15 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 				})
 				addBlogToUser(db, username, blogname, website)
 				http.Redirect(w, r, "/admin/", http.StatusFound)
+				return
 			}
 		} else {
-			fmt.Fprintf(w, "Failure creating blog! Please choose a different name!")
+			http.Redirect(w, r, "/error/Failure creating blog! Please choose a different name!", http.StatusFound)
+			return
 		}
 	} else {
-		fmt.Fprintf(w, "You must be authenticated!") // TODO make this look better
+		http.Redirect(w, r, "/error/You must be authenticated!", http.StatusFound)
+		return
 	}
 }
 
@@ -381,6 +391,16 @@ func getUserFromCookie(value string) string {
 		return string(servervalue)
 	}
 	return ""
+}
+
+func checkUrl(s string) (string, error) {
+	u, err := url.Parse(s)
+
+	if err != nil || u.Host == "" {
+		u, err = url.Parse("http://" + s)
+	}
+
+	return u.Host, err
 }
 
 func main() {
