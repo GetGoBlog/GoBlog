@@ -125,7 +125,7 @@ var admin = `
 <div class="form-group">
   <label class="col-md-4 control-label" for="blog">Blog Name</label>  
   <div class="col-md-6">
-  <input id="blogname" name="blogname" type="text" placeholder="Blog Name" class="form-control input-md" required="">
+  <input id="blogname" name="blogname" type="text" placeholder="exampleblog" class="form-control input-md" required="">
     
   </div>
 </div>
@@ -134,7 +134,7 @@ var admin = `
 <div class="form-group">
   <label class="col-md-4 control-label" for="website">Blog Website</label>  
   <div class="col-md-6">
-  <input id="blogname" name="website" type="text" placeholder="Blog Website" class="form-control input-md" required="">
+  <input id="blogname" name="website" type="text" placeholder="example.com" class="form-control input-md" required="">
     
   </div>
 </div>
