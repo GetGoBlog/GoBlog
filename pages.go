@@ -39,12 +39,6 @@ var base = `
       <ul class="nav navbar-nav">
         <li {{if eq .PageName "admin" }}class="active"{{end}}><a href="/admin">Admin</a></li>
       </ul>
-      <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
       <ul class="nav navbar-nav navbar-right">
 		<li {{if not .User}}class="hidden"{{end}}> <a href="/admin">{{if .User}}{{.User}}{{end}}</a> </li>
 		<li {{if not .User}}class="hidden"{{end}}> <a href="/logout">Log Out</a> </li>

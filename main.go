@@ -24,20 +24,26 @@ func init() {
 	defer db.Close()
 
 	db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte("UsersBucket")) // username -> password
+		_, err := tx.CreateBucketIfNotExists([]byte("UsersBucket")) // email -> password
 		if err != nil {
 			return fmt.Errorf("Error with UsersBucket: %s", err)
 		}
 		return nil
 	})
 	db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte("CookieBucket")) // random string -> username
+		_, err := tx.CreateBucketIfNotExists([]byte("CookieBucket")) // random string -> email
 		if err != nil {
-			return fmt.Errorf("Error with UsersBucket: %s", err)
+			return fmt.Errorf("Error with CookieBucket: %s", err)
 		}
 		return nil
 	})
-
+	db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte("BlogMappingBucket")) // random string -> email
+		if err != nil {
+			return fmt.Errorf("Error with BlockMappingBucket: %s", err)
+		}
+		return nil
+	})
 }
 
 func LoginPage(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
@@ -107,6 +113,24 @@ func SignupHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 
 	if addUser(email, password) {
 		fmt.Println("Success!")
+		cookie := http.Cookie{Name: "goblog", Value: RandomString(), Expires: time.Now().Add(time.Hour * 24 * 7 * 52), HttpOnly: true, MaxAge: 50000, Path: "/"}
+		http.SetCookie(w, &cookie)
+		db, err := bolt.Open("goblog.db", 0600, nil)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer db.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+		db.Update(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("CookieBucket"))
+			err = b.Put([]byte(cookie.Value), []byte(email))
+			return err
+		})
+		if err != nil {
+			fmt.Println(err)
+		}
 		http.Redirect(w, r, "/admin/", http.StatusFound)
 	} else {
 		fmt.Println("Failure!")
@@ -129,7 +153,7 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 }
 
-func verifyUser(w http.ResponseWriter, r *http.Request, username string, password string) bool {
+func verifyUser(w http.ResponseWriter, r *http.Request, email string, password string) bool {
 	correctpass := []byte("")
 	db, err := bolt.Open("goblog.db", 0600, nil)
 	if err != nil {
@@ -138,7 +162,7 @@ func verifyUser(w http.ResponseWriter, r *http.Request, username string, passwor
 	defer db.Close()
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("UsersBucket"))
-		correctpass = b.Get([]byte(username))
+		correctpass = b.Get([]byte(email))
 		return nil
 	})
 	if password == string(correctpass) {
@@ -151,7 +175,7 @@ func verifyUser(w http.ResponseWriter, r *http.Request, username string, passwor
 
 		db.Update(func(tx *bolt.Tx) error {
 			b := tx.Bucket([]byte("CookieBucket"))
-			err = b.Put([]byte(cookie.Value), []byte(username))
+			err = b.Put([]byte(cookie.Value), []byte(email))
 			return err
 		})
 		if err != nil {
@@ -162,7 +186,7 @@ func verifyUser(w http.ResponseWriter, r *http.Request, username string, passwor
 	return false
 }
 
-func addUser(username string, password string) bool {
+func addUser(email string, password string) bool {
 	check := []byte("")
 	db, err := bolt.Open("goblog.db", 0600, nil)
 	if err != nil {
@@ -171,13 +195,13 @@ func addUser(username string, password string) bool {
 	defer db.Close()
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("UsersBucket"))
-		check = b.Get([]byte(username))
+		check = b.Get([]byte(email))
 		return nil
 	})
 	if check == nil {
 		db.Update(func(tx *bolt.Tx) error {
 			b := tx.Bucket([]byte("UsersBucket"))
-			err := b.Put([]byte(username), []byte(password))
+			err := b.Put([]byte(email), []byte(password))
 			return err
 		})
 		return true
