@@ -179,7 +179,7 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	blogname := r.FormValue("blogname")
 	website := r.FormValue("website")
-	port := 1001
+	port := rand.Intn(63000) + 2000
 	blogcheck := []byte("")
 
 	username := getUser(w, r)
@@ -199,7 +199,8 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 			if err != nil && !DEBUG {
 				fmt.Println(err)
 			} else {
-				fmt.Printf("%s", create)
+				fmt.Println("80 -> " + strconv.Itoa(port))
+				fmt.Fprintf(w, "%s", create)
 				db.Update(func(tx *bolt.Tx) error {
 					b := tx.Bucket([]byte("BlogMappingBucket"))
 					err := b.Put([]byte(blogname), []byte(website))
@@ -366,6 +367,7 @@ func getUserFromCookie(value string) string {
 }
 
 func main() {
+	fmt.Println("Started server on port 1337")
 	router := httprouter.New()
 	router.GET("/", MainPage)
 	router.POST("/login/", LoginHandler)
@@ -374,5 +376,5 @@ func main() {
 	router.GET("/admin/", AdminPage)
 	router.POST("/admin/", AdminHandler)
 	router.GET("/logout/", LogoutHandler)
-	log.Fatal(http.ListenAndServe(":1338", router))
+	log.Fatal(http.ListenAndServe(":1337", router))
 }
