@@ -55,14 +55,14 @@ var base = `
 			<li>
 				<div class="row">
 					<div class="col-md-12">
-						<form class="form" role="form" method="post" action="/login" accept-charset="UTF-8" id="login-nav">
+						<form class="form" role="form" method="post" action="/login/" accept-charset="UTF-8" id="login-nav">
 							<div class="form-group">
-								<label class="sr-only" for="exampleInputEmail2">Email address</label>
-								<input type="email" class="form-control" id="exampleInputEmail2" placeholder="Email address" required>
+								<label class="sr-only" for="email">Email address</label>
+								<input type="email" class="form-control" name="email" id="email" placeholder="Email address" required>
 							</div>
 							<div class="form-group">
-								<label class="sr-only" for="exampleInputPassword2">Password</label>
-								<input type="password" class="form-control" id="exampleInputPassword2" placeholder="Password" required>
+								<label class="sr-only" for="password">Password</label>
+								<input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
 							</div>
 							<div class="checkbox">
 								<label>
@@ -97,9 +97,9 @@ var login = `
 			</div>
 			<form class="form-horizontal" action="/login/" method="POST">
 			    <div class="form-group">
-			        <label for="name" class="col-sm-2 control-label">User name</label>
+			        <label for="email" class="col-sm-2 control-label">User name</label>
 			        <div class="col-sm-4">
-			            <input type="text" class="form-control" id="name" name="name" required>
+			            <input type="text" class="form-control" id="email" name="email" required>
 			        </div>
 			    </div>
 			    <div class="form-group">
