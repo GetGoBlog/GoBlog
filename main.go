@@ -62,10 +62,22 @@ func LoginHandler(w http.ResponseWriter, req *http.Request, p httprouter.Params)
 }
 
 func LogoutHandler(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
+	cookie, err := req.Cookie("goblog")
+	if err != nil {
+		fmt.Println(err)
+	}
 	delete := http.Cookie{Name: "goblog", Value: "delete", Expires: time.Now(), HttpOnly: true, Path: "/"}
 	http.SetCookie(w, &delete)
-	// Delete cookie from DB
-
+	db, err := bolt.Open("goblog.db", 0600, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
+	db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("CookieBucket"))
+		err := b.Delete([]byte(cookie.Value))
+		return err
+	})
 	http.Redirect(w, req, "/", http.StatusFound)
 }
 
