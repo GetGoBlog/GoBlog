@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -55,7 +56,7 @@ func init() {
 		return nil
 	})
 	db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte("UserToBlog")) // random string -> email
+		_, err := tx.CreateBucketIfNotExists([]byte("UserToBlog")) // user -> blogdetails
 		if err != nil {
 			return fmt.Errorf("Error with UserToBlog: %s", err)
 		}
@@ -111,6 +112,17 @@ func MainPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	baseT.ExecuteTemplate(w, "base", map[string]string{
 		"PageName": "main",
 		"User":     getUser(w, r),
+	})
+}
+
+func ErrorPage(w http.ResponseWriter, r *http.Request, pm httprouter.Params) {
+	baseT := template.Must(template.New("base").Parse(base))
+	baseT = template.Must(baseT.Parse(errorPage))
+
+	baseT.ExecuteTemplate(w, "base", map[string]string{
+		"PageName": "error",
+		"User":     getUser(w, r),
+		"Error":    pm.ByName("errorcode"),
 	})
 }
 
@@ -180,6 +192,10 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	blogname := r.FormValue("blogname")
 	website := r.FormValue("website")
 	port := rand.Intn(63000) + 2000
+
+	re := regexp.MustCompile("[^A-Za-z]")
+	blogname = re.ReplaceAllString(blogname, "")
+
 	blogcheck := []byte("")
 
 	username := getUser(w, r)
@@ -194,6 +210,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 			blogcheck = b.Get([]byte(blogname))
 			return nil
 		})
+
 		if blogcheck == nil {
 			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
 			if err != nil && !DEBUG {
@@ -376,5 +393,6 @@ func main() {
 	router.GET("/admin/", AdminPage)
 	router.POST("/admin/", AdminHandler)
 	router.GET("/logout/", LogoutHandler)
+	router.GET("/error/:errorcode/", ErrorPage)
 	log.Fatal(http.ListenAndServe(":1337", router))
 }

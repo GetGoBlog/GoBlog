@@ -12,7 +12,7 @@ var base = `
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 		
 		<!-- Optional theme -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/paper/bootstrap.min.css">
 		
 		<!-- Latest compiled and minified JavaScript -->
 		<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
@@ -210,8 +210,53 @@ var signup = `
 {{end}}
 `
 
+var errorPage = `
+{{define "content"}}
+
+<div class="col-md-6 col-md-offset-3">
+	<div class="alert alert-danger" role="alert">
+	  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+	  <span class="sr-only">Error:</span>
+	  {{.Error}}
+	</div>
+</div>
+
+{{end}}
+`
+
 var mainPage = `
 {{define "content"}}
-Main
+
+<div class="row">
+	<div class="col-md-5 col-md-offset-1">
+		<h1>GoBlog</h1>
+		<h2>Simple Free Blog Hosting</h2>
+		<hr>
+		<h3>Deploy your own blog in as little as 15 seconds</h3>
+	</div>
+	<div class="col-md-6">
+		<img src="https://placeholdit.imgix.net/~text?txtsize=100&txt=Animated%20GIF%20goes%20here&w=600&h=500" style="width:100%">
+	</div>
+</div>
+
+<hr>
+
+<div class="row text-center">
+	<h2>Simple to Set Up</h2>
+	<div class="col-md-4">
+		<h3>Easy to Deploy</h3>
+		<i class="glyphicon glyphicon-ok" style="font-size: 20vw; color: #2196f3"></i>
+	</div>
+	<div class="col-md-4">
+		<h3>Upload a Custom Theme</h3>
+		<i class="glyphicon glyphicon-cloud-upload" style="font-size: 20vw; color: #2196f3"></i>
+	</div>
+	<div class="col-md-4">
+		<h3>Use Your Own Domain Name</h3>
+		<i class="glyphicon glyphicon-globe" style="font-size: 20vw; color: #2196f3"></i>
+	</div>
+
+</div>
+
 {{end}}
 `
