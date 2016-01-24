@@ -37,7 +37,7 @@ var base = `
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li {{if eq .PageName "admin" }}class="active"{{end}}><a href="/admin">Admin</a></li>
+        <li {{if not .User}}class="hidden"{{end}}{{if eq .PageName "admin" }}class="active"{{end}}><a href="/admin">Admin</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
 		<li {{if not .User}}class="hidden"{{end}}> <a href="/admin">{{if .User}}{{.User}}{{end}}</a> </li>
