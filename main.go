@@ -65,6 +65,7 @@ func LogoutHandler(w http.ResponseWriter, req *http.Request, p httprouter.Params
 	delete := http.Cookie{Name: "goblog", Value: "delete", Expires: time.Now(), HttpOnly: true, Path: "/"}
 	http.SetCookie(w, &delete)
 	// Delete cookie from DB
+
 	http.Redirect(w, req, "/", http.StatusFound)
 }
 
@@ -122,6 +123,7 @@ func verifyUser(w http.ResponseWriter, r *http.Request, username string, passwor
 	if err != nil {
 		fmt.Println(err)
 	}
+	defer db.Close()
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("UsersBucket"))
 		correctpass = b.Get([]byte(username))
@@ -130,6 +132,10 @@ func verifyUser(w http.ResponseWriter, r *http.Request, username string, passwor
 	if password == string(correctpass) {
 		cookie := http.Cookie{Name: "goblog", Value: RandomString(), Expires: time.Now().Add(time.Hour * 24 * 7 * 52), HttpOnly: true, MaxAge: 50000, Path: "/"}
 		db, err := bolt.Open("goblog.db", 0600, nil)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer db.Close()
 		db.Update(func(tx *bolt.Tx) error {
 			b := tx.Bucket([]byte("CookieBucket"))
 			err := b.Put([]byte(cookie.Value), []byte(username))
@@ -144,14 +150,15 @@ func verifyUser(w http.ResponseWriter, r *http.Request, username string, passwor
 func addUser(username string, password string) bool {
 	check := []byte("")
 	db, err := bolt.Open("goblog.db", 0600, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("UsersBucket"))
 		check = b.Get([]byte(username)) //username
 		return nil
 	})
-	if err != nil {
-		fmt.Println(err)
-	}
 	if len(check) > 2 {
 		db.Update(func(tx *bolt.Tx) error {
 			b := tx.Bucket([]byte("UsersBucket"))
@@ -195,11 +202,15 @@ func getUser(w http.ResponseWriter, r *http.Request) string {
 	cookie, err := r.Cookie("goblog")
 	servervalue := []byte("")
 	db, err := bolt.Open("goblog.db", 0600, nil)
+	defer db.Close()
 	db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("CookieBucket"))
 		servervalue = b.Get([]byte(cookie.Value))
 		return nil
 	})
+	if err != nil {
+		fmt.Println(err)
+	}
 	if err == nil {
 		if len(servervalue) > 2 {
 			if cookie.Value != "delete" {
