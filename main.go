@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -13,6 +14,13 @@ import (
 	"github.com/boltdb/bolt"
 	"github.com/julienschmidt/httprouter"
 )
+
+const DEBUG bool = false
+
+type BlogDetails struct {
+	Blogname string `json:"blogname"`
+	Website  string `json:"website"`
+}
 
 // TODO add bcrypt
 
@@ -43,6 +51,13 @@ func init() {
 		_, err := tx.CreateBucketIfNotExists([]byte("BlogMappingBucket")) // random string -> email
 		if err != nil {
 			return fmt.Errorf("Error with BlogMappingBucket: %s", err)
+		}
+		return nil
+	})
+	db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte("UserToBlog")) // random string -> email
+		if err != nil {
+			return fmt.Errorf("Error with UserToBlog: %s", err)
 		}
 		return nil
 	})
@@ -140,14 +155,21 @@ func SignupHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	if getUser(w, r) != "" {
+	username := getUser(w, r)
+	if username != "" {
+		db, err := bolt.Open("goblog.db", 0600, nil)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer db.Close()
 
 		baseT := template.Must(template.New("base").Parse(base))
 		baseT = template.Must(baseT.Parse(admin))
 
-		baseT.ExecuteTemplate(w, "base", map[string]string{
+		baseT.ExecuteTemplate(w, "base", map[string]interface{}{
 			"PageName": "admin",
-			"User":     getUser(w, r),
+			"User":     username,
+			"Blogs":    getBlogsForUser(db, username),
 		})
 	} else {
 		fmt.Fprintf(w, "You must be authenticated!") // TODO make this look better
@@ -160,7 +182,8 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	port := 1001
 	blogcheck := []byte("")
 
-	if getUser(w, r) != "" {
+	username := getUser(w, r)
+	if username != "" {
 		db, err := bolt.Open("goblog.db", 0600, nil)
 		if err != nil {
 			fmt.Println(err)
@@ -173,15 +196,17 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 		})
 		if blogcheck == nil {
 			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
-			if err != nil {
+			if err != nil && !DEBUG {
 				fmt.Println(err)
 			} else {
-				fmt.Fprintf(w, "%s", create)
+				fmt.Printf("%s", create)
 				db.Update(func(tx *bolt.Tx) error {
-					b := tx.Bucket([]byte("UsersBucket"))
+					b := tx.Bucket([]byte("BlogMappingBucket"))
 					err := b.Put([]byte(blogname), []byte(website))
 					return err
 				})
+				addBlogToUser(db, username, blogname, website)
+				http.Redirect(w, r, "/admin/", http.StatusFound)
 			}
 		} else {
 			fmt.Fprintf(w, "Failure creating blog! Please choose a different name!")
@@ -189,6 +214,42 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	} else {
 		fmt.Fprintf(w, "You must be authenticated!") // TODO make this look better
 	}
+}
+
+func addBlogToUser(db *bolt.DB, username string, blogname string, website string) {
+	existingblogs := []byte("")
+
+	db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("UserToBlog"))
+		existingblogs = b.Get([]byte(username))
+		return nil
+	})
+
+	var v []BlogDetails = make([]BlogDetails, 0)
+	json.Unmarshal(existingblogs, &v)
+
+	db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("UserToBlog"))
+		v = append(v, BlogDetails{blogname, website})
+		m, _ := json.Marshal(v)
+		err := b.Put([]byte(username), m)
+		return err
+	})
+}
+
+func getBlogsForUser(db *bolt.DB, username string) []BlogDetails {
+	existingblogs := []byte("")
+
+	db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("UserToBlog"))
+		existingblogs = b.Get([]byte(username))
+		return nil
+	})
+
+	var v []BlogDetails = make([]BlogDetails, 0)
+	json.Unmarshal(existingblogs, &v)
+
+	return v
 }
 
 func verifyUser(w http.ResponseWriter, r *http.Request, email string, password string) bool {

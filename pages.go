@@ -77,7 +77,7 @@ var base = `
   </div><!-- /.container-fluid -->
 </nav>
 
-    {{ template "content" }}
+    {{ template "content" .}}
   </body>
 </html>
  
@@ -113,6 +113,18 @@ var login = `
 
 var admin = `
 {{define "content"}}
+	
+{{ if .Blogs }}
+	<div class="col-md-6 col-md-offset-3">
+		<div class="list-group">
+			<div class="list-group-item active">Your Blogs</div>
+			{{ range .Blogs }}
+				<a href="http://{{.Website}}" class="list-group-item"> {{.Blogname}} </a>
+			{{ end }}
+		</div>
+	</div>
+{{ end }}
+
 <div class="col-md-6 col-md-offset-3">
 
 <form class="form-horizontal" action="/admin/" method="POST">
