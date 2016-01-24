@@ -135,18 +135,9 @@ var admin = `
 
 <!-- Text input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="blog">Blog Name</label>  
+  <label class="col-md-4 control-label" for="blog">Blog Name/Subdomain (.ghost.pw)</label>  
   <div class="col-md-6">
   <input id="blogname" name="blogname" type="text" placeholder="exampleblog" class="form-control input-md" required="">
-    
-  </div>
-</div>
-
-<!-- Text input-->
-<div class="form-group">
-  <label class="col-md-4 control-label" for="website">Blog Website</label>  
-  <div class="col-md-6">
-  <input id="blogname" name="website" type="text" placeholder="example.com" class="form-control input-md" required="">
     
   </div>
 </div>

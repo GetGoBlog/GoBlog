@@ -1,14 +1,14 @@
 #!/bin/bash
 # Script written by Faraz
 # Automates creating a new Journey Blog with nginx
-SITENAME="$1" # Site Name (Without URL)
-SITEURL="$2" # Site URL excluding http:// or www.
-PORT="$3" # <- Random port passed in
-if [ -z "$SITENAME" ] || [ -z "$SITEURL" ] || [ -z "$PORT" ] 
+SITENAME="$1" # <- Subdomain
+PORT="$2" # <- Random port passed in
+if [ -z "$SITENAME" ] || [ -z "$PORT" ]
 then
   echo 'Error, not enough arguments!'
   exit 2
 fi
+SITEURL=$SITENAME.goghost.pw
 SITENAME=journey-$SITENAME
 mkdir -p /var/www/$SITENAME
 cd /var/www/$SITENAME
