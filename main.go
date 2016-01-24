@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os/exec"
+	"strconv"
 	"time"
 
 	"github.com/boltdb/bolt"
@@ -156,7 +157,7 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	blogname := r.FormValue("blogname")
 	website := r.FormValue("website")
-	port := 1000
+	port := 1001
 	blogcheck := []byte("")
 
 	if getUser(w, r) != "" {
@@ -171,7 +172,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 			return nil
 		})
 		if blogcheck == nil {
-			create, err := exec.Command("./create.sh", blogname, website, string(port)).Output()
+			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
 			if err != nil {
 				fmt.Println(err)
 			} else {
