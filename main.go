@@ -195,7 +195,9 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	blogname := r.FormValue("blogname") // <- Subdomain
 	//	websiteOriginal := r.FormValue("website")
-	port := rand.Intn(63000) + 2000
+	seed := rand.NewSource(time.Now().UnixNano()) // needs new seed each time
+	rng := rand.New(seed)
+	port := rng.Intn(63000) + 2000 // TODO auto-incrementing bucket
 
 	//	website, err := checkUrl(websiteOriginal)
 	//	if err != nil {
@@ -239,7 +241,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 				return
 			}
 		} else {
-			http.Redirect(w, r, "/error/Failure creating blog! Please choose a different name!", http.StatusFound)
+			http.Redirect(w, r, "/admin/", http.StatusFound) // this is running twice I believe
 			return
 		}
 	} else {
@@ -412,6 +414,7 @@ func main() {
 	router := httprouter.New()
 	router.GET("/", MainPage)
 	router.POST("/login/", LoginHandler)
+	router.GET("/login/", LoginPage)
 	router.GET("/signup/", SignupPage)
 	router.POST("/signup/", SignupHandler)
 	router.GET("/admin/", AdminPage)
