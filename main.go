@@ -17,7 +17,7 @@ import (
 )
 
 const DEBUG bool = false
-const STATIC_FILES_DIR string = "/Users/zain/Dropbox/HedgeChart/go/src/github.com/gophergala2016/GoBlog"
+const STATIC_FILES_DIR string = "/root/GoBlog"
 
 type BlogDetails struct {
 	Blogname string `json:"blogname"`
