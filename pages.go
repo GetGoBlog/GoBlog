@@ -44,33 +44,7 @@ var base = `
 		<li {{if not .User}}class="hidden"{{end}}> <a href="/logout">Log Out</a> </li>
 		<li {{if .User}}class="hidden"{{end}} {{if eq .PageName "signup" }}class="active"{{end}}><a href="/signup">Sign Up</a></li>
 	<li {{if .User}}class="hidden"{{end}} class="dropdown">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Sign in <b class="caret"></b></a>
-		<ul class="dropdown-menu" style="padding: 15px;min-width: 250px;">
-			<li>
-				<div class="row">
-					<div class="col-md-12">
-						<form class="form" role="form" method="post" action="/login/" accept-charset="UTF-8" id="login-nav">
-							<div class="form-group">
-								<label class="sr-only" for="email">Email address</label>
-								<input type="email" class="form-control" name="email" id="email" placeholder="Email address" required>
-							</div>
-							<div class="form-group">
-								<label class="sr-only" for="password">Password</label>
-								<input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
-							</div>
-							<div class="checkbox">
-								<label>
-									<input type="checkbox"> Remember me
-								</label>
-							</div>
-							<div class="form-group">
-								<button type="submit" class="btn btn-success btn-block">Sign in</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</li>
-		<ul>
+		<a href="/login">Sign in</a>
 	</li>
       </ul>
     </div><!-- /.navbar-collapse -->
@@ -147,11 +121,12 @@ var admin = `
 
 <!-- Text input-->
 <div class="form-group">
-  <label class="col-md-4 control-label" for="blog">Blog Name/Subdomain (.ghost.pw)</label>  
-  <div class="col-md-6">
-  <input id="blogname" name="blogname" type="text" placeholder="exampleblog" class="form-control input-md" required="">
-    
-  </div>
+  <div class="col-sm-6">
+  <input id="blogname" name="blogname" type="text" placeholder="example" class="form-control input-md" required="">
+</div>
+<div class="col-sm-6">
+<p>.goblog.pw</p>
+</div>
 </div>
 
 <!-- Text input-->
@@ -336,6 +311,7 @@ var newMainPage = `
 					<li><a href="#services">Features</a></li>
 					<li><a href="#team">Team</a></li>
 					<li><a href="#pricing">Pricing</a></li>
+					<li><a href="/login/">Login</a></li>
 					<li><a href="#" data-toggle="modal" data-target="#modal1" class="btn btn-blue">Sign Up</a></li>
 				</ul>
 			</div>
