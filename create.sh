@@ -44,6 +44,7 @@ echo " }" >> $SITENAME.conf
 echo "}" >> $SITENAME.conf
 service $SITENAME start
 service nginx restart
+service $SITENAME restart # <- required
 echo "---------------------------------------------------"
 echo "You may need to oonfigure your DNS Records if you used a custom domain!"
 echo "ALL DONE! $SITEURL is viewable as a Journey blog!"
