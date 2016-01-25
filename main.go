@@ -17,6 +17,7 @@ import (
 )
 
 const DEBUG bool = false
+const STATIC_FILES_DIR string = "/Users/zain/Dropbox/HedgeChart/go/src/github.com/gophergala2016/GoBlog"
 
 type BlogDetails struct {
 	Blogname string `json:"blogname"`
@@ -106,8 +107,8 @@ func LogoutHandler(w http.ResponseWriter, req *http.Request, p httprouter.Params
 }
 
 func MainPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	baseT := template.Must(template.New("base").Parse(base))
-	baseT = template.Must(baseT.Parse(mainPage))
+	baseT := template.Must(template.New("base").Parse(newMainPage))
+	//baseT = template.Must(baseT.Parse(mainPage))
 
 	baseT.ExecuteTemplate(w, "base", map[string]string{
 		"PageName": "main",
@@ -417,5 +418,9 @@ func main() {
 	router.POST("/admin/", AdminHandler)
 	router.GET("/logout/", LogoutHandler)
 	router.GET("/error/:errorcode/", ErrorPage)
+	router.ServeFiles("/css/*filepath", http.Dir(STATIC_FILES_DIR+"/css/"))
+	router.ServeFiles("/js/*filepath", http.Dir(STATIC_FILES_DIR+"/js/"))
+	router.ServeFiles("/img/*filepath", http.Dir(STATIC_FILES_DIR+"/img/"))
+	router.ServeFiles("/fonts/*filepath", http.Dir(STATIC_FILES_DIR+"/fonts/"))
 	log.Fatal(http.ListenAndServe(":1337", router))
 }
