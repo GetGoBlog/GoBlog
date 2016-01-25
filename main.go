@@ -12,6 +12,13 @@ import (
 	"strconv"
 	"time"
 
+	//for uploader
+	"io"
+	"io/ioutil"
+	"net/http"
+	"path"
+
+
 	"github.com/boltdb/bolt"
 	"github.com/julienschmidt/httprouter"
 )
@@ -248,6 +255,101 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	}
 }
 
+
+
+// uploaderHandler expects two fields to be posted, userid and avatarFile.
+func uploaderHandler(w http.ResponseWriter, req *http.Request) {
+	userId := req.FormValue("userid")
+	file, header, err := req.FormFile("avatarFile")
+	if err != nil {
+		io.WriteString(w, err.Error())
+		return
+	}
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		io.WriteString(w, err.Error())
+		return
+	}
+	filename := path.Join("avatars", userId+path.Ext(header.Filename))
+	err = ioutil.WriteFile(filename, data, 0777)
+	if err != nil {
+		io.WriteString(w, err.Error())
+		return
+	}
+	io.WriteString(w, "Successful")
+}
+
+
+func UploadPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	success := r.FormValue("success")
+
+	username := getUser(w, r)
+	if username != "" {
+		db, err := bolt.Open("goblog.db", 0600, nil)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer db.Close()
+
+		baseT := template.Must(template.New("base").Parse(base))
+		baseT = template.Must(baseT.Parse(upload))
+
+		baseT.ExecuteTemplate(w, "base", map[string]interface{}{
+			"PageName": "upload",
+			"User":     username,
+			"Blogs":    getBlogsForUser(db, username),
+			//[]TODO "Theme":	upl
+			"Success":  success,
+		})
+	} else {
+		http.Redirect(w, r, "/error/You must be authenticated!", http.StatusFound)
+	}
+}
+
+func UploadHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	blogname := r.FormValue("blogname") // <- Subdomain
+	//	websiteOriginal := r.FormValue("website")
+	port := rand.Intn(63000) + 2000
+
+	//	website, err := checkUrl(websiteOriginal)
+	//	if err != nil {
+	//		http.Redirect(w, r, fmt.Sprintf("/error/%s is not a valid url", websiteOriginal), http.StatusFound)
+	//		return
+	//	}
+
+	re := regexp.MustCompile("[^A-Za-z]")
+	blogname = re.ReplaceAllString(blogname, "")
+	website := blogname + ".goblog.pw"
+
+	blogcheck := []byte("")
+
+	username := getUser(w, r)
+	if username != "" {
+		db, err := bolt.Open("goblog.db", 0600, nil)
+		if err != nil {
+			fmt.Println(err)
+		}
+		defer db.Close()
+		db.View(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("BlogMappingBucket"))
+			blogcheck = b.Get([]byte(blogname))
+			return nil
+		})
+
+		if blogcheck != nil { //was ==
+			uploaderHandler() //TODO probably BUG			
+			return
+			}
+		} else {
+			http.Redirect(w, r, "/error/Failure adding theme! Please choose a different name!", http.StatusFound)
+			return
+		}
+	} else {
+		http.Redirect(w, r, "/error/You must be authenticated!", http.StatusFound)
+		return
+	}
+}
+
 func addBlogToUser(db *bolt.DB, username string, blogname string, website string) {
 	existingblogs := []byte("")
 
@@ -414,6 +516,8 @@ func main() {
 	router.POST("/login/", LoginHandler)
 	router.GET("/signup/", SignupPage)
 	router.POST("/signup/", SignupHandler)
+	router.GET("/upload/", UploadPage)
+	router.POST("/upload/", UploadHandler)
 	router.GET("/admin/", AdminPage)
 	router.POST("/admin/", AdminHandler)
 	router.GET("/logout/", LogoutHandler)

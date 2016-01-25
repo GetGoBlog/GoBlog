@@ -238,6 +238,53 @@ var errorPage = `
 {{end}}
 `
 
+
+
+var upload = `
+{{define "content"}}
+<div class="col-md-6 col-md-offset-3">
+
+<form class="form-horizontal" action="/upload/" method="POST">
+<fieldset>
+
+<!-- Form Name -->
+<legend>Upload a new Theme to your GoBlog</legend>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="email">E-mail address</label>  
+  <div class="col-md-6">
+  <input id="email" name="email" type="email" placeholder="E-mail address" class="form-control input-md" required="">
+    
+  </div>
+</div> 
+
+<!-- Button -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="submit"></label>
+  <div class="col-md-4">
+    <button id="submit" name="submit" class="btn btn-success">Sign Me Up!</button>
+  </div>
+</div>
+<!-- Upload box   they used form-group, not container  div class="form-group" --> 
+    <div class="form-group">
+      <form role="form" action="/uploader" enctype="multipart/form-data" method="post">
+        <div class="form-group">
+          <label for="message">Select file</label>
+          <input type="file" name="avatarFile" />
+        </div>
+        <input type="submit" value="Upload" class="btn btn-default" />
+      </form>
+    </div>
+
+</fieldset>
+</form>
+
+{{end}}
+`
+
+
+
 var mainPage = `
 {{define "content"}}
 
