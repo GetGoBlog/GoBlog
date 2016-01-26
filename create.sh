@@ -19,7 +19,7 @@ rm journey-linux-amd64.zip
 mv journey-linux-amd64/ journey
 cd journey
 sed -i -e "s/8084/$PORT/g" config.json
-sed -i -e "s/127.0.0.1:$PORT/$SITEURL:$PORT/g" config.json
+sed -i -e "s/127.0.0.1:$PORT/$SITEURL:$PORT/g" config.json # TODO remove
 echo "start on runlevel [2345]" >> /etc/init/$SITENAME.conf
 echo "stop on runlevel [!2345]" >> /etc/init/$SITENAME.conf
 echo "respawn" >> /etc/init/$SITENAME.conf

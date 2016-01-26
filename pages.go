@@ -65,7 +65,7 @@ var login = `
 			</div>
 			<form class="form-horizontal" action="/login/" method="POST">
 			    <div class="form-group">
-			        <label for="email" class="col-sm-2 control-label">User name</label>
+			        <label for="email" class="col-sm-2 control-label">Email</label>
 			        <div class="col-sm-4">
 			            <input type="text" class="form-control" id="email" name="email" required>
 			        </div>
