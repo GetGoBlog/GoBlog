@@ -14,6 +14,7 @@ import (
 
 	"github.com/boltdb/bolt"
 	"github.com/julienschmidt/httprouter"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const DEBUG bool = false
@@ -23,8 +24,6 @@ type BlogDetails struct {
 	Blogname string `json:"blogname"`
 	Website  string `json:"website"`
 }
-
-// TODO add bcrypt
 
 func init() {
 	// Handles db/bucket creation
@@ -66,13 +65,18 @@ func init() {
 }
 
 func LoginPage(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	baseT := template.Must(template.New("base").Parse(base))
-	baseT = template.Must(baseT.Parse(login))
+	username := getUser(w, req)
+	if username == "" {
+		baseT := template.Must(template.New("base").Parse(base))
+		baseT = template.Must(baseT.Parse(login))
 
-	baseT.ExecuteTemplate(w, "base", map[string]string{
-		"PageName": "login",
-		"User":     getUser(w, req),
-	})
+		baseT.ExecuteTemplate(w, "base", map[string]string{
+			"PageName": "login",
+			"User":     getUser(w, req),
+		})
+	} else {
+		http.Redirect(w, req, "/admin/", http.StatusFound)
+	}
 }
 
 func LoginHandler(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
@@ -107,13 +111,17 @@ func LogoutHandler(w http.ResponseWriter, req *http.Request, p httprouter.Params
 }
 
 func MainPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	baseT := template.Must(template.New("base").Parse(newMainPage))
-	//baseT = template.Must(baseT.Parse(mainPage))
+	username := getUser(w, r)
+	if username == "" {
+		baseT := template.Must(template.New("base").Parse(newMainPage))
 
-	baseT.ExecuteTemplate(w, "base", map[string]string{
-		"PageName": "main",
-		"User":     getUser(w, r),
-	})
+		baseT.ExecuteTemplate(w, "base", map[string]string{
+			"PageName": "main",
+			"User":     getUser(w, r),
+		})
+	} else {
+		http.Redirect(w, r, "/admin/", http.StatusFound)
+	}
 }
 
 func ErrorPage(w http.ResponseWriter, r *http.Request, pm httprouter.Params) {
@@ -193,17 +201,19 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	blogname := r.FormValue("blogname") // <- Subdomain
+	blogname := r.FormValue("blogname")
 	//	websiteOriginal := r.FormValue("website")
-	seed := rand.NewSource(time.Now().UnixNano()) // needs new seed each time
+	seed := rand.NewSource(time.Now().UnixNano())
 	rng := rand.New(seed)
 	port := rng.Intn(63000) + 2000 // TODO auto-incrementing bucket
 
-	//	website, err := checkUrl(websiteOriginal)
-	//	if err != nil {
-	//		http.Redirect(w, r, fmt.Sprintf("/error/%s is not a valid url", websiteOriginal), http.StatusFound)
-	//		return
-	//	}
+	/*
+		website, err := checkUrl(websiteOriginal)
+			if err != nil {
+				http.Redirect(w, r, fmt.Sprintf("/error/%s is not a valid url", websiteOriginal), http.StatusFound)
+				return
+			}
+	*/
 
 	re := regexp.MustCompile("[^A-Za-z]")
 	blogname = re.ReplaceAllString(blogname, "")
@@ -225,12 +235,13 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 		})
 
 		if blogcheck == nil {
+			// TODO switch to pure go
 			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
 			if err != nil && !DEBUG {
 				fmt.Println(err)
 			} else {
 				fmt.Println("80 -> " + strconv.Itoa(port))
-				fmt.Println(create)
+				fmt.Println(string(create)) // needs to be printed as string
 				db.Update(func(tx *bolt.Tx) error {
 					b := tx.Bucket([]byte("BlogMappingBucket"))
 					err := b.Put([]byte(blogname), []byte(website))
@@ -288,6 +299,7 @@ func getBlogsForUser(db *bolt.DB, username string) []BlogDetails {
 
 func verifyUser(w http.ResponseWriter, r *http.Request, email string, password string) bool {
 	correctpass := []byte("")
+	inputpass := []byte(password)
 	db, err := bolt.Open("goblog.db", 0600, nil)
 	if err != nil {
 		fmt.Println(err)
@@ -298,22 +310,15 @@ func verifyUser(w http.ResponseWriter, r *http.Request, email string, password s
 		correctpass = b.Get([]byte(email))
 		return nil
 	})
-	if password == string(correctpass) {
+	if bcrypt.CompareHashAndPassword(correctpass, inputpass) == nil {
 		cookie := http.Cookie{Name: "goblog", Value: RandomString(), Expires: time.Now().Add(time.Hour * 24 * 7 * 52), HttpOnly: true, MaxAge: 50000, Path: "/"}
 		http.SetCookie(w, &cookie)
-
-		if err != nil {
-			fmt.Println(err)
-		}
 
 		db.Update(func(tx *bolt.Tx) error {
 			b := tx.Bucket([]byte("CookieBucket"))
 			err = b.Put([]byte(cookie.Value), []byte(email))
 			return err
 		})
-		if err != nil {
-			fmt.Println(err)
-		}
 		return true
 	}
 	return false
@@ -322,6 +327,7 @@ func verifyUser(w http.ResponseWriter, r *http.Request, email string, password s
 func addUser(email string, password string) bool {
 	check := []byte("")
 	db, err := bolt.Open("goblog.db", 0600, nil)
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -334,7 +340,7 @@ func addUser(email string, password string) bool {
 	if check == nil {
 		db.Update(func(tx *bolt.Tx) error {
 			b := tx.Bucket([]byte("UsersBucket"))
-			err := b.Put([]byte(email), []byte(password))
+			err := b.Put([]byte(email), []byte(hashedPass))
 			return err
 		})
 		return true
@@ -371,10 +377,7 @@ func RandomString() string {
 }
 
 func getUser(w http.ResponseWriter, r *http.Request) string {
-	cookie, err := r.Cookie("goblog")
-	if err != nil {
-		fmt.Println(err) // No cookie
-	}
+	cookie, _ := r.Cookie("goblog")
 	if cookie != nil {
 		return getUserFromCookie(cookie.Value)
 	}

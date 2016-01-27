@@ -63,6 +63,9 @@ var login = `
 	  		<div class="page-header">
 				<h1>Login</h1>
 			</div>
+				<div class="alert alert-success">
+				<h1>We updated our crypto. You must create a new account if you made one prior to 1/27/16</h1>
+			</div>
 			<form class="form-horizontal" action="/login/" method="POST">
 			    <div class="form-group">
 			        <label for="email" class="col-sm-2 control-label">Email</label>
@@ -97,6 +100,13 @@ var admin = `
 		{{end}}
 	
 		<div class="list-group">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="alert alert-success">
+			<!-- This is needed. We are gaining users but they are confused on what to do next. -->
+				<h1>Note: You MUST create a new admin account for each blog you create. Click the Blog Admin and register!</h1>
+				<h1>This account is entirely different from your main account. Each blog has it's own dedicated admin panel.</h1>
+			</div>
+</div>
 			<div class="list-group-item active">Your Blogs</div>
 			{{ range .Blogs }}
 				<li class="list-group-item"> 
@@ -213,43 +223,6 @@ var errorPage = `
 {{end}}
 `
 
-var mainPage = `
-{{define "content"}}
-
-<div class="row">
-	<div class="col-md-5 col-md-offset-1">
-		<h1>GoBlog</h1>
-		<h2>Simple Free Blog Hosting</h2>
-		<hr>
-		<h3>Deploy your own blog in as little as 15 seconds</h3>
-	</div>
-	<div class="col-md-6">
-		<img src="https://placeholdit.imgix.net/~text?txtsize=100&txt=Animated%20GIF%20goes%20here&w=600&h=500" style="width:100%">
-	</div>
-</div>
-
-<hr>
-
-<div class="row text-center">
-	<h2>Simple to Set Up</h2>
-	<div class="col-md-4">
-		<h3>Easy to Deploy</h3>
-		<i class="glyphicon glyphicon-ok" style="font-size: 20vw; color: #2196f3"></i>
-	</div>
-	<div class="col-md-4">
-		<h3>Upload a Custom Theme</h3>
-		<i class="glyphicon glyphicon-cloud-upload" style="font-size: 20vw; color: #2196f3"></i>
-	</div>
-	<div class="col-md-4">
-		<h3>Use Your Own Domain Name</h3>
-		<i class="glyphicon glyphicon-globe" style="font-size: 20vw; color: #2196f3"></i>
-	</div>
-
-</div>
-
-{{end}}
-`
-
 var newMainPage = `
 
 <!DOCTYPE html>
@@ -326,7 +299,7 @@ var newMainPage = `
 					<div class="row">
 						<div class="col-md-12 text-center">
 							<h3 class="light white">Welcome to GoBlog</h3>
-							<h1 class="white typed">Deploy your own blog in seconds.</h1>
+							<h1 class="white typed">Endless writing, completely free.</h1>
 							<span class="typed-cursor">|</span>
 						</div>
 					</div>
@@ -357,7 +330,7 @@ var newMainPage = `
 							<img src="img/icons/guru-blue.png" alt="" class="icon">
 						</div>
 						<h4 class="heading">Easy Setup</h4>
-						<p class="description">Deploying your own blog takes seconds.</p>
+						<p class="description">From no blog to GoBlog in under 10 seconds.</p>
 					</div>
 				</div>
 				<div class="col-md-4">
@@ -414,14 +387,14 @@ var newMainPage = `
 		<div class="container">
 			<div class="row title text-center">
 				<h2 class="margin-top white">Pricing</h2>
-				<h4 class="light white">Choose your favorite pricing plan and sign up today!</h4>
+				<h4 class="light white">GoBlog is free for life if you sign up today.</h4>
 			</div>
 			<div class="row no-margin">
 				<div class="col-md-7 no-padding col-md-offset-5 pricings text-center">
 					<div class="pricing">
 						<div class="box-main active" data-img="img/cover1.jpg">
 							<h4 class="white">GoBlog Beta</h4>
-							<h4 class="white regular light">$0.00 <span class="small-font">/ life</span></h4>
+							<h4 class="white regular light">Free <span class="small-font">for life</span></h4>
 							<a href="#" data-toggle="modal" data-target="#modal1" class="btn btn-white-fill">Sign Up Now</a>
 							<i class="info-icon icon_question"></i>
 						</div>
@@ -445,19 +418,9 @@ var newMainPage = `
 				<div class="col-md-8 col-md-offset-2">
 					<div class="owl-twitter owl-carousel">
 						<div class="item text-center">
-							<i class="icon fa fa-twitter"></i>
-							<h4 class="white light">To enjoy the glow of good health, you must exercise.</h4>
-							<h4 class="light-white light">#health #training #exercise</h4>
-						</div>
-						<div class="item text-center">
-							<i class="icon fa fa-twitter"></i>
-							<h4 class="white light">To enjoy the glow of good health, you must exercise.</h4>
-							<h4 class="light-white light">#health #training #exercise</h4>
-						</div>
-						<div class="item text-center">
-							<i class="icon fa fa-twitter"></i>
-							<h4 class="white light">To enjoy the glow of good health, you must exercise.</h4>
-							<h4 class="light-white light">#health #training #exercise</h4>
+							<i class="icon fa fa-github"></i>
+							<h4 class="white light">We are completely open source.</h4>
+							<h4 class="light-white light">www.github.com/GetGoBlog/GoBlog</h4>
 						</div>
 					</div>
 				</div>
@@ -487,13 +450,11 @@ var newMainPage = `
 		<div class="container">
 			<div class="row bottom-footer text-center-mobile">
 				<div class="col-sm-8">
-					<p>&copy; 2015 GoBlog All Rights Reserved. Powered by <a href="http://www.phir.co/">PHIr</a> exclusively for <a href="http://tympanus.net/codrops/">Codrops</a></p>
+					<p>&copy; 2016 GoBlog All Rights Reserved. Powered by <a href="https://github.com/kabukky/journey">Journey</a> & <a href="https://golang.org/">Golang</a>. Theme by <a href="http://www.phir.co/">PHIr</a>.
 				</div>
 				<div class="col-sm-4 text-right text-center-mobile">
 					<ul class="social-footer">
-						<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-						<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-						<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+						<li><a href="https://github.com/GetGoBlog/GoBlog"><i class="fa fa-github"></i></a></li>
 					</ul>
 				</div>
 			</div>
