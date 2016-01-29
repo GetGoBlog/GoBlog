@@ -61,9 +61,6 @@ var login = `
 {{ define "content" }}
 	  	<div class="container-fluid">
 	  		<div class="page-header">
-				<div class="alert alert-success">
-				We updated our crypto. You must create a new account if you made one prior to 1/27/16
-				</div>
 				<h1>Login</h1>
 			</div>
 			</div>
@@ -95,7 +92,7 @@ var admin = `
 {{ if .Blogs }}
 			<div class="alert alert-success">
 			<!-- This is needed. We are gaining users but they are confused on what to do next. -->
-				Blog accounts are entirely different from your main account. Each blog has it's own dedicated admin panel.
+				Your blog account is seperate from your main account. Click "Blog Admin" to get started on your blog!
 			</div>
 	<div class="col-md-6 col-md-offset-3">
 		{{if .Success}}
