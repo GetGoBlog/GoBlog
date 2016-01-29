@@ -234,7 +234,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 			return nil
 		})
 
-		if blogcheck == nil {
+		if blogcheck == nil && len(blogname) > 1 {
 			// TODO switch to pure go
 			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
 			if err != nil && !DEBUG {
@@ -252,7 +252,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 				return
 			}
 		} else {
-			http.Redirect(w, r, "/admin/", http.StatusFound) // this is running twice I believe
+			http.Redirect(w, r, "/", http.StatusFound)
 			return
 		}
 	} else {
