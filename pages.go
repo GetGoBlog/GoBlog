@@ -61,10 +61,11 @@ var login = `
 {{ define "content" }}
 	  	<div class="container-fluid">
 	  		<div class="page-header">
+				<div class="alert alert-success">
+				We updated our crypto. You must create a new account if you made one prior to 1/27/16
+				</div>
 				<h1>Login</h1>
 			</div>
-				<div class="alert alert-success">
-				<h1>We updated our crypto. You must create a new account if you made one prior to 1/27/16</h1>
 			</div>
 			<form class="form-horizontal" action="/login/" method="POST">
 			    <div class="form-group">
@@ -92,21 +93,19 @@ var admin = `
 {{define "content"}}
 
 {{ if .Blogs }}
+			<div class="alert alert-success">
+			<!-- This is needed. We are gaining users but they are confused on what to do next. -->
+				Blog accounts are entirely different from your main account. Each blog has it's own dedicated admin panel.
+			</div>
 	<div class="col-md-6 col-md-offset-3">
 		{{if .Success}}
 			<div class="alert alert-success">
 				<h1>Success: Your blog, {{.Success}}, has been created!</h1>
 			</div>
 		{{end}}
-	
+		</div>
 		<div class="list-group">
-		<div class="col-md-6 col-md-offset-3">
-			<div class="alert alert-success">
-			<!-- This is needed. We are gaining users but they are confused on what to do next. -->
-				<h1>Note: You MUST create a new admin account for each blog you create. Click the Blog Admin and register!</h1>
-				<h1>This account is entirely different from your main account. Each blog has it's own dedicated admin panel.</h1>
-			</div>
-</div>
+
 			<div class="list-group-item active">Your Blogs</div>
 			{{ range .Blogs }}
 				<li class="list-group-item"> 

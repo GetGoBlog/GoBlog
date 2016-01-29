@@ -3,9 +3,29 @@
 	"ignore": "test",
 	"package": [
 		{
+			"path": "github.com/boltdb/bolt",
+			"revision": "ee4a0888a9abe7eefe5a0992ca4cb06864839873",
+			"revisionTime": "2016-01-19T17:55:44-07:00"
+		},
+		{
 			"path": "github.com/julienschmidt/httprouter",
-			"revision": "f30ab90cccbd5171771d26b6557d3c2f49e047a6",
-			"revisionTime": "2015-12-04T08:14:43+01:00"
+			"revision": "abb0dc9f755ff0a9d818db28d9d8b9810066e2b5",
+			"revisionTime": "2016-01-22T16:25:10+01:00"
+		},
+		{
+			"path": "golang.org/x/crypto/bcrypt",
+			"revision": "1f22c0103821b9390939b6776727195525381532",
+			"revisionTime": "2016-01-26T09:50:25-08:00"
+		},
+		{
+			"path": "golang.org/x/crypto/blowfish",
+			"revision": "1f22c0103821b9390939b6776727195525381532",
+			"revisionTime": "2016-01-26T09:50:25-08:00"
+		},
+		{
+			"path": "golang.org/x/sys/unix",
+			"revision": "eb2c74142fd19a79b3f237334c7384d5167b1b46",
+			"revisionTime": "2016-01-26T17:36:05-08:00"
 		}
 	]
 }
