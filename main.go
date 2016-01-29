@@ -252,7 +252,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 				return
 			}
 		} else {
-			http.Redirect(w, r, "/admin/", http.StatusFound) // this is running twice I believe
+			//			http.Redirect(w, r, "/admin/", http.StatusFound) // this is running twice I believe
 			return
 		}
 	} else {
