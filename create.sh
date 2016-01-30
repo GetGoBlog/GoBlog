@@ -15,7 +15,7 @@ cd /var/www/$SITENAME
 cp -R /journey . # Recursively copy preexisting files
 cd journey
 sed -i -e "s/8084/$PORT/g" config.json
-sed -i -e "s/127.0.0.1:$PORT/$SITEURL:$PORT/g" config.json
+sed -i -e "s/127.0.0.1:$PORT/$SITEURL/g" config.json # Experimental
 echo "start on runlevel [2345]" >> /etc/init/$SITENAME.conf
 echo "stop on runlevel [!2345]" >> /etc/init/$SITENAME.conf
 echo "respawn" >> /etc/init/$SITENAME.conf
