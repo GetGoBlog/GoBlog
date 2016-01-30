@@ -1,6 +1,6 @@
 # GoBlog 
 
-GoBlog is our entry for the 2016 GopherGala.
+GoBlog was our entry for the 2016 GopherGala -- now it's an immersive blogging platform which is actively in development. Try it out live at www.goblog.pw
 
 GoBlog is a platform for easily deploying your own blog. We are powered by [Journey](https://github.com/kabukky/journey), a blog engine written in Go which is compatible with Ghost themes.
 
