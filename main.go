@@ -62,6 +62,13 @@ func init() {
 		}
 		return nil
 	})
+	db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte("PortBucket")) // port -> blog
+		if err != nil {
+			return fmt.Errorf("Error with PortBucket: %s", err)
+		}
+		return nil
+	})
 }
 
 func LoginPage(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
@@ -201,11 +208,24 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	port := 1400 // TODO autoincrement this
 	blogname := r.FormValue("blogname")
-	//	websiteOriginal := r.FormValue("website")
-	seed := rand.NewSource(time.Now().UnixNano())
-	rng := rand.New(seed)
-	port := rng.Intn(63000) + 2000 // TODO auto-incrementing bucket
+	db, err := bolt.Open("goblog.db", 0600, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer db.Close()
+	db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("PortBucket"))
+		port = b.Get([]byte(email))
+		return nil
+	})
+	port += 1
+	db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("PortBucket"))
+		err := b.Put([]byte(email), []byte(hashedPass))
+		return err
+	})
 
 	/*
 		website, err := checkUrl(websiteOriginal)
@@ -235,13 +255,12 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 		})
 
 		if blogcheck == nil && len(blogname) > 1 {
-			// TODO switch to pure go
 			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
 			if err != nil && !DEBUG {
 				fmt.Println(err)
 			} else {
 				fmt.Println("80 -> " + strconv.Itoa(port))
-				fmt.Println(string(create)) // needs to be printed as string
+				fmt.Println(string(create))
 				db.Update(func(tx *bolt.Tx) error {
 					b := tx.Bucket([]byte("BlogMappingBucket"))
 					err := b.Put([]byte(blogname), []byte(website))
