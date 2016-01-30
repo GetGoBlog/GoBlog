@@ -2,8 +2,8 @@
 # Script written by Faraz
 # Automates creating a new Journey Blog with nginx
 SITENAME="$1" # Site Name (Without URL)
-SITEURL="$2" # Site URL excluding http:// or www.
-PORT="$3" # <- Random port passed in
+SITEURL="$2" # Site URL excluding http:// or www. (subdomain for now)
+PORT="$3" # <- Port passed in
 if [ -z "$SITENAME" ] || [ -z "$SITEURL" ] || [ -z "$PORT" ] 
 then
   echo 'Error, not enough arguments!'
@@ -12,14 +12,10 @@ fi
 SITENAME=journey-$SITENAME
 mkdir -p /var/www/$SITENAME
 cd /var/www/$SITENAME
-echo "Getting latest release!" # TODO make this a symlink for all except config and db files
-wget --quiet https://github.com/kabukky/journey/releases/download/v0.1.9/journey-linux-amd64.zip
-unzip -qq journey-linux-amd64.zip
-rm journey-linux-amd64.zip
-mv journey-linux-amd64/ journey
+cp -R /journey . # Recursively copy preexisting files
 cd journey
 sed -i -e "s/8084/$PORT/g" config.json
-sed -i -e "s/127.0.0.1:$PORT/$SITEURL:$PORT/g" config.json # TODO remove
+sed -i -e "s/127.0.0.1:$PORT/$SITEURL:$PORT/g" config.json
 echo "start on runlevel [2345]" >> /etc/init/$SITENAME.conf
 echo "stop on runlevel [!2345]" >> /etc/init/$SITENAME.conf
 echo "respawn" >> /etc/init/$SITENAME.conf
@@ -45,8 +41,5 @@ echo "}" >> $SITENAME.conf
 service $SITENAME start
 service nginx restart
 service $SITENAME restart # <- required
-echo "---------------------------------------------------"
-echo "You may need to oonfigure your DNS Records if you used a custom domain!"
-echo "ALL DONE! $SITEURL is viewable as a Journey blog!"
-echo "Setup at $SITEURL/admin"
+echo "Created new Journey blog! -> $SITEURL"
 echo "---------------------------------------------------"
