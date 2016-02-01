@@ -208,7 +208,10 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	port := 1400 // TODO autoincrement this
+	/*
+		TODO make https://github.com/boltdb/bolt/blob/master/bucket.go#L333
+	*/
+	port := 1400
 	blogname := r.FormValue("blogname")
 	db, err := bolt.Open("goblog.db", 0600, nil)
 	if err != nil {
