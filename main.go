@@ -211,24 +211,28 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	/*
 		TODO make https://github.com/boltdb/bolt/blob/master/bucket.go#L333
 	*/
-	port := 1400
+	var port uint64
 	blogname := r.FormValue("blogname")
 	db, err := bolt.Open("goblog.db", 0600, nil)
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer db.Close()
-	db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("PortBucket"))
-		port = b.Get([]byte(email))
-		return nil
-	})
-	port += 1
 	db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("PortBucket"))
-		err := b.Put([]byte(email), []byte(hashedPass))
+		port, _ = b.NextSequence()
 		return err
 	})
+	if err != nil {
+		fmt.Println(err)
+	}
+	if port != 0 {
+		port += 1400
+	} else {
+		seed := rand.NewSource(time.Now().UnixNano())
+		rng := rand.New(seed)
+		port = uint64(rng.Intn(63000) + 2000)
+	}
 
 	/*
 		website, err := checkUrl(websiteOriginal)
@@ -258,11 +262,12 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 		})
 
 		if blogcheck == nil && len(blogname) > 1 {
-			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
+			intPort := int(port)
+			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(intPort)).Output()
 			if err != nil && !DEBUG {
 				fmt.Println(err)
 			} else {
-				fmt.Println("80 -> " + strconv.Itoa(port))
+				fmt.Println("80 -> " + strconv.Itoa(intPort))
 				fmt.Println(string(create))
 				db.Update(func(tx *bolt.Tx) error {
 					b := tx.Bucket([]byte("BlogMappingBucket"))
