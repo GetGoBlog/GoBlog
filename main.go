@@ -207,7 +207,7 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 }
 
-func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func BlogCreationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	/*
 		TODO make https://github.com/boltdb/bolt/blob/master/bucket.go#L333
 	*/
@@ -229,6 +229,7 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	if port != 0 {
 		port += 1400
 	} else {
+		// If for some reason autoincrementing doesn't work, resort to traditional method.
 		seed := rand.NewSource(time.Now().UnixNano())
 		rng := rand.New(seed)
 		port = uint64(rng.Intn(63000) + 2000)
@@ -448,7 +449,7 @@ func main() {
 	router.GET("/signup/", SignupPage)
 	router.POST("/signup/", SignupHandler)
 	router.GET("/admin/", AdminPage)
-	router.POST("/admin/", AdminHandler)
+	router.POST("/admin/", BlogCreationHandler)
 	router.GET("/logout/", LogoutHandler)
 	router.GET("/error/:errorcode/", ErrorPage)
 	router.ServeFiles("/css/*filepath", http.Dir(STATIC_FILES_DIR+"/css/"))
