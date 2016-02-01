@@ -214,6 +214,11 @@ var errorPage = `
 	  <span class="sr-only">Error:</span>
 	  {{.Error}}
 	</div>
+	<form class="form-horizontal" action="/" method="GET">
+			    <div class="col-sm-6">
+			        <button type="submit" class="btn btn-primary pull-right">Go Back</button>
+			    </div>
+			</form>
 </div>
 
 {{end}}

@@ -255,7 +255,7 @@ func BlogCreationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.P
 			return nil
 		})
 
-		if blogcheck == nil && len(blogname) > 1 {
+		if blogcheck == nil && len(blogname) >= 1 {
 			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
 			if err != nil && !DEBUG {
 				fmt.Println(err)
@@ -267,10 +267,17 @@ func BlogCreationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.P
 					err := b.Put([]byte(blogname), []byte(website))
 					return err
 				})
+				if err != nil {
+					fmt.Println(err)
+				}
 				addBlogToUser(db, username, blogname, website)
-				http.Redirect(w, r, "/admin/", http.StatusFound)
+				blogname = ""
+				http.Redirect(w, r, "/", http.StatusFound)
 				return
 			}
+		} else if blogcheck != nil && blogname != "" {
+			http.Redirect(w, r, "/error/Blog already exists!", http.StatusFound)
+			return
 		} else {
 			http.Redirect(w, r, "/", http.StatusFound)
 			return
