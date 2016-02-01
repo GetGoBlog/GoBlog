@@ -62,6 +62,13 @@ func init() {
 		}
 		return nil
 	})
+	db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte("PortBucket")) // port -> blog
+		if err != nil {
+			return fmt.Errorf("Error with PortBucket: %s", err)
+		}
+		return nil
+	})
 }
 
 func LoginPage(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
@@ -200,12 +207,26 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 }
 
-func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func BlogCreationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	blogname := r.FormValue("blogname")
-	//	websiteOriginal := r.FormValue("website")
+	//	db, err := bolt.Open("goblog.db", 0600, nil)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//	defer db.Close()
+	//	db.Update(func(tx *bolt.Tx) error {
+	//		b := tx.Bucket([]byte("PortBucket"))
+	//		port, _ = b.NextSequence()
+	//		return err
+	//	})
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+
+	// If for some reason autoincrementing doesn't work, resort to traditional method.
 	seed := rand.NewSource(time.Now().UnixNano())
 	rng := rand.New(seed)
-	port := rng.Intn(63000) + 2000 // TODO auto-incrementing bucket
+	port := rng.Intn(63000) + 2000
 
 	/*
 		website, err := checkUrl(websiteOriginal)
@@ -234,23 +255,29 @@ func AdminHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 			return nil
 		})
 
-		if blogcheck == nil && len(blogname) > 1 {
-			// TODO switch to pure go
+		if blogcheck == nil && len(blogname) >= 1 {
 			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
 			if err != nil && !DEBUG {
 				fmt.Println(err)
 			} else {
 				fmt.Println("80 -> " + strconv.Itoa(port))
-				fmt.Println(string(create)) // needs to be printed as string
+				fmt.Println(string(create))
 				db.Update(func(tx *bolt.Tx) error {
 					b := tx.Bucket([]byte("BlogMappingBucket"))
 					err := b.Put([]byte(blogname), []byte(website))
 					return err
 				})
+				if err != nil {
+					fmt.Println(err)
+				}
 				addBlogToUser(db, username, blogname, website)
-				http.Redirect(w, r, "/admin/", http.StatusFound)
+				blogname = ""
+				http.Redirect(w, r, "/", http.StatusFound)
 				return
 			}
+		} else if blogcheck != nil && blogname != "" {
+			http.Redirect(w, r, "/error/Blog already exists!", http.StatusFound)
+			return
 		} else {
 			http.Redirect(w, r, "/", http.StatusFound)
 			return
@@ -421,7 +448,7 @@ func main() {
 	router.GET("/signup/", SignupPage)
 	router.POST("/signup/", SignupHandler)
 	router.GET("/admin/", AdminPage)
-	router.POST("/admin/", AdminHandler)
+	router.POST("/admin/", BlogCreationHandler)
 	router.GET("/logout/", LogoutHandler)
 	router.GET("/error/:errorcode/", ErrorPage)
 	router.ServeFiles("/css/*filepath", http.Dir(STATIC_FILES_DIR+"/css/"))
