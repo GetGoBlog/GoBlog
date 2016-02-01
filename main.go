@@ -208,29 +208,25 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func BlogCreationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	var port uint64
 	blogname := r.FormValue("blogname")
-	db, err := bolt.Open("goblog.db", 0600, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer db.Close()
-	db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("PortBucket"))
-		port, _ = b.NextSequence()
-		return err
-	})
-	if err != nil {
-		fmt.Println(err)
-	}
-	if port != 0 {
-		port += 1400
-	} else {
-		// If for some reason autoincrementing doesn't work, resort to traditional method.
-		seed := rand.NewSource(time.Now().UnixNano())
-		rng := rand.New(seed)
-		port = uint64(rng.Intn(63000) + 2000)
-	}
+	//	db, err := bolt.Open("goblog.db", 0600, nil)
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+	//	defer db.Close()
+	//	db.Update(func(tx *bolt.Tx) error {
+	//		b := tx.Bucket([]byte("PortBucket"))
+	//		port, _ = b.NextSequence()
+	//		return err
+	//	})
+	//	if err != nil {
+	//		fmt.Println(err)
+	//	}
+
+	// If for some reason autoincrementing doesn't work, resort to traditional method.
+	seed := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(seed)
+	port := rng.Intn(63000) + 2000
 
 	/*
 		website, err := checkUrl(websiteOriginal)
@@ -260,12 +256,11 @@ func BlogCreationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		})
 
 		if blogcheck == nil && len(blogname) > 1 {
-			intPort := int(port)
-			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(intPort)).Output()
+			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
 			if err != nil && !DEBUG {
 				fmt.Println(err)
 			} else {
-				fmt.Println("80 -> " + strconv.Itoa(intPort))
+				fmt.Println("80 -> " + strconv.Itoa(port))
 				fmt.Println(string(create))
 				db.Update(func(tx *bolt.Tx) error {
 					b := tx.Bucket([]byte("BlogMappingBucket"))
