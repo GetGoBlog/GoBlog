@@ -208,9 +208,6 @@ func AdminPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 func BlogCreationHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	/*
-		TODO make https://github.com/boltdb/bolt/blob/master/bucket.go#L333
-	*/
 	var port uint64
 	blogname := r.FormValue("blogname")
 	db, err := bolt.Open("goblog.db", 0600, nil)
