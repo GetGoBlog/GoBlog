@@ -1,5 +1,7 @@
 # GoBlog 
 
+Let's Encrypt support coming soon -- stay tuned!
+
 GoBlog was our entry for the 2016 GopherGala -- now it's a powerful blogging platform which is actively in development. Try it out live at www.goblog.pw
 
 GoBlog is a platform for easily deploying your own blog. We are powered by [Voyage](https://github.com/GetGoBlog/Voyage), a blog engine written in Go which is compatible with Ghost themes.
