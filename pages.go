@@ -225,259 +225,224 @@ var errorPage = `
 `
 
 var newMainPage = `
-
 <!DOCTYPE html>
-<html lang="en">
+<html class="gr__codeply_com"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <title>GoBlog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" value="notranslate">
 
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>GoBlog</title>
-	<meta name="description" content="GoBlog is a platform for users to easily deploy their blog." />
-	<meta name="keywords" content="free, ghost, journey, theme, blog" />
-	<!-- Favicons (created with http://realfavicongenerator.net/)-->
-	<link rel="apple-touch-icon" sizes="57x57" href="img/favicons/apple-touch-icon-57x57.png">
-	<link rel="apple-touch-icon" sizes="60x60" href="img/favicons/apple-touch-icon-60x60.png">
-	<link rel="icon" type="image/png" href="img/favicons/favicon-32x32.png" sizes="32x32">
-	<link rel="icon" type="image/png" href="img/favicons/favicon-16x16.png" sizes="16x16">
-	<link rel="manifest" href="img/favicons/manifest.json">
-	<link rel="shortcut icon" href="img/favicons/favicon.ico">
-	<meta name="msapplication-TileColor" content="#00a8ff">
-	<meta name="msapplication-config" content="img/favicons/browserconfig.xml">
-	<meta name="theme-color" content="#ffffff">
-	<!-- Normalize -->
-	<link rel="stylesheet" type="text/css" href="css/normalize.css">
-	<!-- Bootstrap -->
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-	<!-- Owl -->
-	<link rel="stylesheet" type="text/css" href="css/owl.css">
-	<!-- Animate.css -->
-	<link rel="stylesheet" type="text/css" href="css/animate.css">
-	<!-- Font Awesome -->
-	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.1.0/css/font-awesome.min.css">
-	<!-- Elegant Icons -->
-	<link rel="stylesheet" type="text/css" href="fonts/eleganticons/et-icons.css">
-	<!-- Main style -->
-	<link rel="stylesheet" type="text/css" href="css/cardio.css">
+
+
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link href="css/animate.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+
+  
 </head>
+<body class="bg-faded">
+  <header id="top">
+    <div class="header-content">
+        <div class="inner">
+            <h2 class="text-primary wow fadeIn">Welcome to GoBlog</h2>
+            <h5 style="visibility: visible; animation-name: fadeIn;" class="wow fadeIn text-normal">Endless writing, completely free.</h5>
+            <hr>
+            <a style="visibility: visible; animation-name: fadeInUp;" href="/signup" class="btn btn-primary-outline btn-xl page-scroll wow fadeInUp">Get Started</a>
+        </div>
+    </div>
+</header>
+<nav id="topNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <button class="navbar-toggler hidden-md-up pull-right" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
+            ☰
+        </button>
+        <a class="navbar-brand page-scroll" href="#top">GoBlog</a>
+        <div class="collapse navbar-toggleable-sm" id="collapsingNavbar">
+            <ul class="nav navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="#team">Team</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="#contact">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link page-scroll" href="/login">Login</a>
+                </li>
+				<li class="nav-item">
+                    <a class="nav-link page-scroll" href="/signup">Sign Up</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<section id="team">
+       <div style="visibility: hidden; animation-name: none;" class="container wow fadeInUp">
+        <h2 class="text-primary wow fadeIn">Our Team</h2>
+        <p class="lead">
+            Together, we build GoBlog, a powerful free open-source blogging platform written in Go.
+        </p>
+        <div class="card-group">
+            <!-- card -->
+            <div class="card">
+               <center><img class="card-img-top img-fluid" style="padding: 30px 0px 0px 0px;" src="img/faraz.jpg" alt="Faraz"></center>
+                <div class="card-block">
+				<center>
+                    <h4 class="card-title">Faraz Fazli</h4>
+                    <p class="card-text">Backend Go Developer</p>
+				</center>
+                </div>
+            </div>
+            <!-- card -->
+            <div class="card">
+                <center><img class="card-img-top img-fluid" style="padding: 30px 0px 0px 0px;" src="img/zain.jpg" alt="Zain"></center>
+                <div class="card-block">
+				<center>
+                    <h4 class="card-title">Zain Hoda</h4>
+                    <p class="card-text">Frontend Developer</p>
+				</center>
+                </div>
+            </div>
+            <!-- card -->
+            <div class="card">
+                <center><img class="card-img-top img-fluid" style="padding: 30px 0px 0px 0px;" src="img/anne.jpg" alt="Anne"></center>
+                <div class="card-block">
+				<center>
+                    <h4 class="card-title">Anne Moroney</h4>
+                    <p class="card-text">DevOps Engineer</p>
+                </center> 
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="contact">
+<aside class="bg-alt">
+    <div class="container text-xs-center">
+        <div class="call-to-action">
+            <h2 class="text-primary wow fadeIn">What are you waiting for?</h2>
+            <a style="visibility: hidden; animation-name: none;" href="/signup" class="btn btn-primary-outline btn-lg wow flipInX text-uppercase">Signup today!</a>
+        </div>
+</aside>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-xs-center">
+			<hr>
+                <h2 class="text-primary wow fadeIn">Contact Us</h2>
+                <hr class="primary">
+                <p>Want to get in touch with us? Send us an email using the form below and we'll get back to you.</p>
+            </div>
+            <div class="col-lg-10 col-lg-offset-1 text-xs-center">
+                <form class="contact-form row" action="http://formspree.io/farazfazli@gmail.com" method="POST">
+                    <div class="col-md-4">
+                        <input type="text" name="name" class="form-control" placeholder="Name">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="email" name="_replyto" class="form-control" placeholder="Email">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="text" name="_subject" class="form-control" placeholder="Subject">
+                    </div>
+                    <div class="col-md-12">
+                        <label></label>
+                        <textarea name="message" class="form-control" rows="9" placeholder="Your message here.."></textarea>
+						<input type="text" name="_gotcha" style="display:none"/>
+                    </div>
+                    <div class="col-md-4 col-md-offset-4">
+                        <br />
+                        <button type="submit" value="Send" class="btn btn-primary-outline btn-lg wow flipInX text-uppercase">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<footer id="footer">
+    <div class="container">
+        <center><span class="pull-right text-muted small">Bootstrap 4 + Faraz Fazli</span></center>
+    </div>
+</footer>
+  
+  <script>
+    // sandbox disable popups
+    if (window.self !== window.top && window.name!="view1") {;
+      window.alert = function(){/*disable alert*/};
+      window.confirm = function(){/*disable confirm*/};
+      window.prompt = function(){/*disable prompt*/};
+      window.open = function(){/*disable open*/};
+    }
+    
+    // prevent href=# click jump
+    document.addEventListener("DOMContentLoaded", function() {
+      var links = document.getElementsByTagName("A");
+      for(var i=0; i < links.length; i++) {
+        if(links[i].href.indexOf('#')!=-1) {
+          links[i].addEventListener("click", function(e) {
+          console.debug("prevent href=# click");
+              if (this.hash) {
+                if (this.hash=="#") {
+                  e.preventDefault();
+                  return false;
+                }
+                else {
+                  /*
+                  var el = document.getElementById(this.hash.replace(/#/, ""));
+                  if (el) {
+                    el.scrollIntoView(true);
+                  }
+                  */
+                }
+              }
+              return false;
+          })
+        }
+      }
+    }, false);
+    
+  </script>
+  
+  <!--scripts loaded here-->
+  
+  <script src="js/jquery.js"></script>
+  <script src="js/bootstrap.js"></script>
+  
+  
+  <script src="js/jquery_002.js"></script>
+  <script src="js/wow.js"></script>
+  
+  <script>
+  (function($) {
+    "use strict";
 
-<body>
-	<div class="preloader">
-		<img src="img/loader.gif" alt="Preloader image">
-	</div>
-	<nav class="navbar">
-		<div class="container">
-			<!-- Brand and toggle get grouped for better mobile display -->
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#"><img src="img/logo.png" data-active-url="img/logo-active.png" alt=""></a>
-			</div>
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav navbar-right main-nav">
-					<li><a href="#intro">Intro</a></li>
-					<li><a href="#services">Features</a></li>
-					<li><a href="#team">Team</a></li>
-					<li><a href="#pricing">Pricing</a></li>
-					<li><a href="/login">Login</a></li>
-					<li><a href="#" data-toggle="modal" data-target="#modal1" class="btn btn-blue">Sign Up</a></li>
-				</ul>
-			</div>
-			<!-- /.navbar-collapse -->
-		</div>
-		<!-- /.container-fluid -->
-	</nav>
-	<header id="intro">
-		<div class="container">
-			<div class="table">
-				<div class="header-text">
-					<div class="row">
-						<div class="col-md-12 text-center">
-							<h3 class="light white">Welcome to GoBlog</h3>
-							<h1 class="white typed">Endless writing, completely free.</h1>
-							<span class="typed-cursor">|</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</header>
-	
-	<section id="services" class="section section-padded">
-		<div class="container">
-			<div class="row text-center title">
-				<h2>Features</h2>
-				<h4 class="light muted">Here is why we are different.</h4>
-			</div>
-			<div class="row services">
-				<div class="col-md-4">
-					<div class="service">
-						<div class="icon-holder">
-							<img src="img/icons/heart-blue.png" alt="" class="icon">
-						</div>
-						<h4 class="heading">Open Source</h4>
-						<p class="description">All of our source code is available on GitHub.</p>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="service">
-						<div class="icon-holder">
-							<img src="img/icons/guru-blue.png" alt="" class="icon">
-						</div>
-						<h4 class="heading">Easy Setup</h4>
-						<p class="description">From no blog to GoBlog in under 10 seconds.</p>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="service">
-						<div class="icon-holder">
-							<img src="img/icons/weight-blue.png" alt="" class="icon">
-						</div>
-						<h4 class="heading">Modern Themes</h4>
-						<p class="description">With the ability to upload any Ghost compatible theme, you have thousands of choices!</p>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="cut cut-bottom"></div>
-	</section>
-	<section id="team" class="section gray-bg">
-		<div class="container">
-			<div class="row title text-center">
-				<h2 class="margin-top">Team</h2>
-				<h4 class="light muted">We worked together to build GoBlog</h4>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<div class="team text-center">
-						<img src="img/team/faraz.png" alt="Team Image" class="avatar">
-						<div class="title">
-							<h4>Faraz Fazli</h4>
-							<h5 class="muted regular">Backend Golang Developer</h5>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="team text-center">
-						<img src="img/team/zain.jpg" alt="Team Image" class="avatar">
-						<div class="title">
-							<h4>Zain Hoda</h4>
-							<h5 class="muted regular">Frontend Developer</h5>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="team text-center">
-						<img src="img/team/anne.jpg" alt="Team Image" class="avatar">
-						<div class="title">
-							<h4>Anne Moroney</h4>
-							<h5 class="muted regular">UX Developer</h5>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<section id="pricing" class="section">
-		<div class="container">
-			<div class="row title text-center">
-				<h2 class="margin-top white">Pricing</h2>
-				<h4 class="light white">GoBlog is free for life if you sign up today.</h4>
-			</div>
-			<div class="row no-margin">
-				<div class="col-md-7 no-padding col-md-offset-5 pricings text-center">
-					<div class="pricing">
-						<div class="box-main active" data-img="img/cover1.jpg">
-							<h4 class="white">GoBlog Beta</h4>
-							<h4 class="white regular light">Free <span class="small-font">for life</span></h4>
-							<a href="#" data-toggle="modal" data-target="#modal1" class="btn btn-white-fill">Sign Up Now</a>
-							<i class="info-icon icon_question"></i>
-						</div>
-						<div class="box-second active">
-							<ul class="white-list text-left">
-								<li>Unlimited Blogs</li>
-								<li>Unlimited Views</li>
-								<li>Unlimited Transfer/Storage</li>
-								<li>Premium DDOS Protection</li>
-								<li>Worldwide CDN</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<section class="section section-padded blue-bg">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-8 col-md-offset-2">
-					<div class="owl-twitter owl-carousel">
-						<div class="item text-center">
-							<i class="icon fa fa-github"></i>
-							<h4 class="white light">We are completely open source.</h4>
-							<h4 class="light-white light">www.github.com/GetGoBlog/GoBlog</h4>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-	<div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content modal-popup">
-				<a href="#" class="close-link"><i class="icon_close_alt2"></i></a>
-				<h3 class="white">Sign Up</h3>
-				<form action="/signup" method="POST" class="popup-form">
-					<input name="email" type="text" class="form-control form-white" placeholder="Email Address">
-					<input name="password" type="password" class="form-control form-white" placeholder="Password">
-					<div class="checkbox-holder text-left">
-						<div class="checkbox">
-							<input type="checkbox" value="None" id="squaredOne" name="check" />
-							<label for="squaredOne"><span>I Agree to the <strong>Terms &amp; Conditions</strong></span></label>
-						</div>
-					</div>
-					<button type="submit" class="btn btn-submit">Submit</button>
-				</form>
-			</div>
-		</div>
-	</div>
-	<footer>
-		<div class="container">
-			<div class="row bottom-footer text-center-mobile">
-				<div class="col-sm-8">
-					<p>&copy; 2016 GoBlog All Rights Reserved. Powered by <a href="https://github.com/kabukky/journey">Journey</a> & <a href="https://golang.org/">Golang</a>. Theme by <a href="http://www.phir.co/">PHIr</a>.
-				</div>
-				<div class="col-sm-4 text-right text-center-mobile">
-					<ul class="social-footer">
-						<li><a href="https://github.com/GetGoBlog/GoBlog"><i class="fa fa-github"></i></a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</footer>
-	<!-- Holder for mobile navigation -->
-	<div class="mobile-nav">
-		<ul>
-		</ul>
-		<a href="#" class="close-link"><i class="arrow_up"></i></a>
-	</div>
-	<!-- Scripts -->
-	<script src="js/jquery-1.11.1.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/wow.min.js"></script>
-	<script src="js/typewriter.js"></script>
-	<script src="js/jquery.onepagenav.js"></script>
-	<script src="js/main.js"></script>
+    $('body').scrollspy({
+        target: '.navbar-fixed-top',
+        offset: 60
+    });
+
+    new WOW().init();
+    
+    $('a.page-scroll').bind('click', function(event) {
+        var $ele = $(this);
+        $('html, body').stop().animate({
+            scrollTop: ($($ele.attr('href')).offset().top - 60)
+        }, 1450, 'easeInOutExpo');
+        event.preventDefault();
+    });
+    
+    $('#collapsingNavbar li a').click(function() {
+        /* always close responsive nav after click */
+        $('.navbar-toggler:visible').click();
+    });
+
+    $('#galleryModal').on('show.bs.modal', function (e) {
+       $('#galleryImage').attr("src",$(e.relatedTarget).data("src"));
+    });
+
+})(jQuery);
+  </script>
+
+
+
 </body>
-
 </html>
-
-
 `
