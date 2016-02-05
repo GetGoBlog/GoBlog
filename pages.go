@@ -64,7 +64,7 @@ var login = `
 				<h1>Login</h1>
 			</div>
 			</div>
-			<form class="form-horizontal" action="/login/" method="POST">
+			<form class="form-horizontal" action="/login" method="POST">
 			    <div class="form-group">
 			        <label for="email" class="col-sm-2 control-label">Email</label>
 			        <div class="col-sm-4">
@@ -119,7 +119,7 @@ var admin = `
 
 <div class="col-md-6 col-md-offset-3">
 
-<form class="form-horizontal" action="/admin/" method="POST">
+<form class="form-horizontal" action="/admin" method="POST">
 <fieldset>
 
 <!-- Form Name -->
@@ -165,7 +165,7 @@ var signup = `
 {{define "content"}}
 <div class="col-md-6 col-md-offset-3">
 
-<form class="form-horizontal" action="/signup/" method="POST">
+<form class="form-horizontal" action="/signup" method="POST">
 <fieldset>
 
 <!-- Form Name -->
@@ -285,7 +285,7 @@ var newMainPage = `
 					<li><a href="#services">Features</a></li>
 					<li><a href="#team">Team</a></li>
 					<li><a href="#pricing">Pricing</a></li>
-					<li><a href="/login/">Login</a></li>
+					<li><a href="/login">Login</a></li>
 					<li><a href="#" data-toggle="modal" data-target="#modal1" class="btn btn-blue">Sign Up</a></li>
 				</ul>
 			</div>
@@ -433,7 +433,7 @@ var newMainPage = `
 			<div class="modal-content modal-popup">
 				<a href="#" class="close-link"><i class="icon_close_alt2"></i></a>
 				<h3 class="white">Sign Up</h3>
-				<form action="/signup/" method="POST" class="popup-form">
+				<form action="/signup" method="POST" class="popup-form">
 					<input name="email" type="text" class="form-control form-white" placeholder="Email Address">
 					<input name="password" type="password" class="form-control form-white" placeholder="Password">
 					<div class="checkbox-holder text-left">
