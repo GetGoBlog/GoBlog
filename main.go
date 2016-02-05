@@ -441,9 +441,9 @@ func main() {
 	router.HandleFunc("/error/{errorcode}", func(w http.ResponseWriter, r *http.Request) {
 		ErrorPage(db, w, r)
 	}).Methods("GET")
-	router.PathPrefix("/css/").Handler(http.FileServer(http.Dir(STATIC_FILES_DIR + "/css/")))
-	router.PathPrefix("/js/").Handler(http.FileServer(http.Dir(STATIC_FILES_DIR + "/js/")))
-	router.PathPrefix("/img/").Handler(http.FileServer(http.Dir(STATIC_FILES_DIR + "/img/")))
-	router.PathPrefix("/fonts/").Handler(http.FileServer(http.Dir(STATIC_FILES_DIR + "/fonts/")))
+	router.PathPrefix("/css/{css}").Handler(http.StripPrefix("/css/", http.FileServer(http.Dir(STATIC_FILES_DIR+"/css/"))))
+	router.PathPrefix("/js/{js}").Handler(http.StripPrefix("/js/", http.FileServer(http.Dir(STATIC_FILES_DIR+"/js/"))))
+	router.PathPrefix("/img/{img}").Handler(http.StripPrefix("/img/", http.FileServer(http.Dir(STATIC_FILES_DIR+"/img/"))))
+	router.PathPrefix("/fonts/{fonts}").Handler(http.StripPrefix("/fonts/", http.FileServer(http.Dir(STATIC_FILES_DIR+"/fonts/"))))
 	log.Fatal(http.ListenAndServe(":1337", router))
 }
