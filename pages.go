@@ -246,9 +246,10 @@ var newMainPage = `
     <div class="header-content">
         <div class="inner">
             <h2 class="text-primary wow fadeIn">Welcome to GoBlog</h2>
-            <h5 style="visibility: visible; animation-name: fadeIn;" class="wow fadeIn text-normal">Endless writing, completely free.</h5>
+			<h4 style="visibility: visible; animation-name: fadeIn;" class="wow fadeIn text-normal">Create your own blog for free.</h5>
+            <h4 style="visibility: visible; animation-name: fadeIn;" class="wow fadeIn text-normal">No ads or payments, ever.</h5>
             <hr>
-            <a style="visibility: visible; animation-name: fadeInUp;" href="/signup" class="btn btn-primary-outline btn-xl page-scroll wow fadeInUp">Get Started</a>
+            <a style="visibility: visible; animation-name: fadeInUp;" href="/signup" class="btn btn-primary-outline btn-xl page-scroll wow fadeInUp">Sign Up</a>
         </div>
     </div>
 </header>
@@ -278,9 +279,9 @@ var newMainPage = `
 </nav>
 <section id="team">
        <div style="visibility: hidden; animation-name: none;" class="container wow fadeInUp">
-        <h2 class="text-primary wow fadeIn">Our Team</h2>
+        <h1 class="text-primary wow fadeIn">Our Team</h1>
         <p class="lead">
-            Together, we build GoBlog, a powerful free open-source blogging platform written in Go.
+            Together, we build GoBlog, a powerful free <a href="https://www.github.com/GetGoBlog/GoBlog" target="ext">open-source</a> blogging platform written in Go.
         </p>
         <div class="card-group">
             <!-- card -->
@@ -321,14 +322,14 @@ var newMainPage = `
     <div class="container text-xs-center">
         <div class="call-to-action">
             <h2 class="text-primary wow fadeIn">What are you waiting for?</h2>
-            <a style="visibility: hidden; animation-name: none;" href="/signup" class="btn btn-primary-outline btn-lg wow flipInX text-uppercase">Signup today!</a>
+            <a style="visibility: hidden; animation-name: none;" href="/signup" class="btn btn-primary-outline btn-lg wow flipInX text-uppercase">Get Started</a>
         </div>
 </aside>
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-xs-center">
 			<hr>
-                <h2 class="text-primary wow fadeIn">Contact Us</h2>
+                <h1 class="text-primary wow fadeIn">Contact Us</h1>
                 <hr class="primary">
                 <p>Want to get in touch with us? Send us an email using the form below and we'll get back to you.</p>
             </div>
