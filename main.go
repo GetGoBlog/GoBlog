@@ -25,13 +25,8 @@ type BlogDetails struct {
 	Website  string `json:"website"`
 }
 
-func init() {
+func initialize(db *bolt.DB) {
 	// Handles db/bucket creation
-	db, err := bolt.Open("goblog.db", 0600, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer db.Close()
 
 	db.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucketIfNotExists([]byte("UsersBucket")) // email -> password
@@ -412,6 +407,7 @@ func main() {
 		fmt.Println(err)
 	}
 	defer db.Close()
+	initialize(db)
 	fmt.Println("Started server on port 1337")
 	router := mux.NewRouter()
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
