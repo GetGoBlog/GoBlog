@@ -8,9 +8,14 @@
 			"revisionTime": "2016-01-19T17:55:44-07:00"
 		},
 		{
-			"path": "github.com/julienschmidt/httprouter",
-			"revision": "abb0dc9f755ff0a9d818db28d9d8b9810066e2b5",
-			"revisionTime": "2016-01-22T16:25:10+01:00"
+			"path": "github.com/gorilla/context",
+			"revision": "1c83b3eabd45b6d76072b66b746c20815fb2872d",
+			"revisionTime": "2015-08-19T22:12:45-07:00"
+		},
+		{
+			"path": "github.com/gorilla/mux",
+			"revision": "26a6070f849969ba72b72256e9f14cf519751690",
+			"revisionTime": "2015-12-31T08:19:08-08:00"
 		},
 		{
 			"path": "golang.org/x/crypto/bcrypt",
