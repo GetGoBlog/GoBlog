@@ -17,7 +17,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-const DEBUG bool = false
 const STATIC_FILES_DIR string = "/root/GoBlog"
 
 type BlogDetails struct {
@@ -225,8 +224,8 @@ func BlogCreationHandler(db *bolt.DB, w http.ResponseWriter, r *http.Request) {
 
 		if blogcheck == nil && len(blogname) >= 1 {
 			create, err := exec.Command("./create.sh", blogname, website, strconv.Itoa(port)).Output()
-			if err != nil && !DEBUG {
-				fmt.Println(err)
+			if err != nil {
+				http.Redirect(w, r, "/error/Server error, please try again later.", http.StatusFound)
 			} else {
 				fmt.Println("80 -> " + strconv.Itoa(port))
 				fmt.Println(string(create))
