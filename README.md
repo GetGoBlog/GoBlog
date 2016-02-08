@@ -1,5 +1,7 @@
 # GoBlog 
 
+![](https://travis-ci.org/GetGoBlog/GoBlog.svg?branch=master)
+
 Let's Encrypt support coming soon -- stay tuned!
 
 GoBlog was our entry for the 2016 GopherGala -- now it's a powerful blogging platform which is actively in development. Try it out live at www.goblog.pw
