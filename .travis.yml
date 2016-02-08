@@ -2,4 +2,8 @@ language: go
 go:
   - 1.5
 
-script: export GO15VENDOREXPERIMENT=1 && go build -v .
+install:
+  - export GO15VENDOREXPERIMENT=1
+  - go get -v -t ./...
+
+script: export GO15VENDOREXPERIMENT=1 && go build -v ./...
