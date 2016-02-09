@@ -1,6 +1,6 @@
 # GoBlog 
 
-[![Build Status](https://travis-ci.org/GetGoBlog/GoBlog.svg?branch=master)](https://travis-ci.org/GetGoBlog/GoBlog) [![Release](https://img.shields.io/github/release/GetGoBlog/GoBlog.svg)](https://github.com/GetGoBlog/GoBlog/releases)
+[![Build Status](https://travis-ci.org/GetGoBlog/GoBlog.svg?branch=master)](https://travis-ci.org/GetGoBlog/GoBlog)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/getgoblog/goblog.svg?style=social?style=flat-square)](https://twitter.com/intent/tweet?text=Check out www.github.com/GetGoBlog/GoBlog an open-source blogging platform written in Go. Try it out free for life at http://goblog.pw)
 [![GoBlog](https://img.shields.io/badge/goblog.pw-online-brightgreen.svg)](http://www.goblog.pw)
 
