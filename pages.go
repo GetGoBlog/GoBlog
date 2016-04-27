@@ -334,19 +334,19 @@ var newMainPage = `
                 <p>Want to get in touch with us? Send us an email using the form below and we'll get back to you.</p>
             </div>
             <div class="col-lg-10 col-lg-offset-1 text-xs-center">
-                <form class="contact-form row" action="http://formspree.io/farazfazli@gmail.com" method="POST">
+                <form class="contact-form row" action="//formspree.io/farazfazli@gmail.com" method="POST">
                     <div class="col-md-4">
                         <input type="text" name="name" class="form-control" placeholder="Name">
                     </div>
                     <div class="col-md-4">
-                        <input type="email" name="_replyto" class="form-control" placeholder="Email">
+                        <input type="email" name="_replyto" class="form-control" placeholder="Email" required>
                     </div>
                     <div class="col-md-4">
                         <input type="text" name="_subject" class="form-control" placeholder="Subject">
                     </div>
                     <div class="col-md-12">
                         <label></label>
-                        <textarea name="message" class="form-control" rows="9" placeholder="Your message here.."></textarea>
+                        <textarea name="message" class="form-control" rows="9" placeholder="Your message here.." required></textarea>
 						<input type="text" name="_gotcha" style="display:none"/>
                     </div>
                     <div class="col-md-4 col-md-offset-4">
