@@ -17,7 +17,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-const STATIC_FILES_DIR string = "/root/GoBlog"
+const STATIC_FILES_DIR string = "/home/faraz/GoBlog"
 
 type BlogDetails struct {
 	Blogname string `json:"blogname"`
