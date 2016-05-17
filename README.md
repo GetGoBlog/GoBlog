@@ -5,11 +5,11 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/GetGoBlog/GoBlog)](https://goreportcard.com/report/github.com/GetGoBlog/GoBlog)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/getgoblog/goblog.svg?style=social?style=flat-square)](https://twitter.com/intent/tweet?text=Check out www.github.com/GetGoBlog/GoBlog an open-source blogging platform written in Go. Try it out free for life at http://goblog.pw)
 
-GoBlog was our entry for the 2016 GopherGala -- now it's a powerful blogging platform which is actively in development. Try it out live at www.goblog.pw
+This is being rewritten from scratch (Go blogging platform + new Go blogging engine) soon -- stay tuned!
 
-GoBlog is a platform for easily deploying your own blog. We are powered by [Voyage](https://github.com/GetGoBlog/Voyage), a blog engine written in Go which is compatible with Ghost themes.
+GoBlog was our entry for the 2016 GopherGala. Try it out live at [https://www.goblog.pw](https://www.goblog.pw)
 
-Passwords hashed with bcrypt. SSL/TLS via Let's Encrypt.
+GoBlog is a platform for easily deploying your own blog. Passwords are hashed with bcrypt. SSL/TLS via Let's Encrypt.
 
 # Why GoBlog?
 
