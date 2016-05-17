@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/GetGoBlog/GoBlog)](https://goreportcard.com/report/github.com/GetGoBlog/GoBlog)
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/getgoblog/goblog.svg?style=social?style=flat-square)](https://twitter.com/intent/tweet?text=Check out www.github.com/GetGoBlog/GoBlog an open-source blogging platform written in Go. Try it out free for life at http://goblog.pw)
 
-This is being rewritten from scratch (Go blogging platform + new Go blogging engine) soon -- stay tuned!
+This is being rewritten from scratch (new platform and new blogging engine) soon -- stay tuned!
 
 GoBlog was our entry for the 2016 GopherGala. Try it out live at [https://www.goblog.pw](https://www.goblog.pw)
 
